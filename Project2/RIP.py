@@ -4,6 +4,7 @@
 # then the next router, then the number of hops.
 
 import random
+import riprouter as rtr
 
 class NetworkMap(object):
 	"""Contains all of the nodes in a network."""
@@ -74,11 +75,9 @@ class NetworkMap(object):
 # This example is from Fig 4.34 in the textbook.
 
 nmap = NetworkMap({ 'A': [{ 'u': ['-',1]}, ('B', 'C'), True, False],
-									  'B': [{ 'v': ['-',1],
-									  				'w': ['-',1]}, ('A', 'D'), True, False],
-									  'C': [{ 'z': ['-',1]}, ('A', 'D'), True, False],
-									  'D': [{ 'x': ['-',1],
-									  				'y': ['-',1]}, ('B', 'C'), True, False]})
+					'B': [{ 'v': ['-',1], 'w': ['-',1]}, ('A', 'D'), True, False],
+					'C': [{ 'z': ['-',1]}, ('A', 'D'), True, False],
+					'D': [{ 'x': ['-',1], 'y': ['-',1]}, ('B', 'C'), True, False]})
 
 # Go through one iteration.
 nmap.iterate()
