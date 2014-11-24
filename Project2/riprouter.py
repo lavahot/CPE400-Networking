@@ -1,4 +1,9 @@
 #ROUTER CLASS
+#Zachary Carlson
+#Thomas 'Taylor' Mansfield
+#MacCallister Higgins
+#CPE 400 Project 2
+
 class Router():
 	"""Router Class"""
 	def __eq__(self, other):
@@ -6,7 +11,6 @@ class Router():
 		return self.id == other.id #Router ID
 
 	def __init__(self, rid, table = []):
-		"""Constructor"""
 		self.id = rid #Router ID
 		self.neighbors = []#List of neighbors
 		self.ripTable = [["Destination Subnet", "Next Router", "Number of Hops"]] #RIP Table
@@ -15,9 +19,9 @@ class Router():
 		if table:
 			for row in table:
 				if len(row) == 3:
-					self.addRow(row[0], row[1], row[2] )
+					self.addRipRow(row[0], row[1], row[2] )
 		
-	def addRow(self, subnet, next, hops):
+	def addRipRow(self, subnet, next, hops):
 		"""Adds row to table and updates neighbors if needed"""
 		#ensure table isn't over the cap and that hops are under hopCap
 		if len(self.ripTable) <= self.ripTableCap and hops < self.hopCap:
