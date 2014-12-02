@@ -10,7 +10,7 @@ import riprouter as rip
 class NetworkSimulation(object):
 	"""Contains all of the nodes in a network."""
 	def __init__(self, netMap=[]):
-		super(NetworkMap, self).__init__()
+		super(NetworkSimulation, self).__init__()
 		self.netMap={"132.192.192.68": rip.Router("132.192.192.68"), "132.192.192.67": rip.Router("132.192.192.67")}
 		#build a network map
 
