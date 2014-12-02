@@ -7,11 +7,11 @@
 import random
 import riprouter as rip
 
-class NetworkMap(object):
+class NetworkSimulation(object):
 	"""Contains all of the nodes in a network."""
 	def __init__(self, netMap=[]):
 		super(NetworkMap, self).__init__()
-		self.netMap={"A": rip.Router("A"), "B": rip.Router("B")}
+		self.netMap={"132.192.192.68": rip.Router("132.192.192.68"), "132.192.192.67": rip.Router("132.192.192.67")}
 		#build a network map
 
 	def advertise(self, router):
@@ -51,6 +51,6 @@ class NetworkMap(object):
 		pass
 
 def main():
-	nmap = NetworkMap()
+	nmap = NetworkSimulation()
 
 if __name__ == "__main__": main()

@@ -8,16 +8,17 @@ class Router():
 	"""Router Class"""
 	def __eq__(self, other):
 		"""Equality only checks router ids"""
-		return self.id == other.id #Router ID
+		return self.ip == other.ip #Router IP
 
-	def __init__(self, rid, table = {}, neighbors = []):
-		self.id = rid #Router ID/KEY
-		self.neighbors = []#List of neighbors
-		self.ripTable = {"Destination Subnet": ["Next Router", "Number of Hops"]} #RIP Table
+	def __init__(self, ip, table = {}, neighbors = []):
+		self.ip = ip #Router IP 
+		self.neighbors = []#List of neighbor's IP Addresses
+		self.ripTable = {"Destination Subnet": ["Next Router", "Number of Hops"]} #RIP Table Subnets end in 0
 		self.ripTableCap = 25 #Maximum number of rows allowed in the RIP Table
 		self.hopCap = 15
 		self.bAdvertising = True
 		self.bUpdated = False
+		self.buffer = []#list of packets that represents it's buffer
 		if table:
 			for row in table:
 				if len(table[row]) == 2:
@@ -35,10 +36,10 @@ class Router():
 		else:
 			return False
 	
-	def addNeighbor(self, neighborID):
+	def addNeighbor(self, neighborIP):
 		#add neighbor to list		
-		if neighborID not in self.neighbors:
-			self.neighbors.append(neighborID)
+		if neighborIP not in self.neighbors:
+			self.neighbors.append(neighborIP)
 	def advertise(self, neighbor):
 		#update their tables
 		pass
