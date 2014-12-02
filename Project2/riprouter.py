@@ -41,5 +41,21 @@ class Router():
 		if neighborIP not in self.neighbors:
 			self.neighbors.append(neighborIP)
 	def advertise(self, neighbor):
-		#update their tables
+		"""Will send out an advertisement to the connected neighbor"""
+		#check if neighbor is valid
+		if neighbor.ip in self.neighbors:
+			nUpdate=False #new bool
+
 		pass
+
+	#def advertise(self, router):
+	#	for subnet in self.netMap[router][0]: #foreach destination in the dictionary of destinations of the router
+	#		if subnet not in self.netMap[neighbor][0]: #if this subnet is not in their particular table, it looks into their table and adds a hop
+	#			self.netMap[neighbor][0][subnet] = (router,self.netMap[router][0][subnet][1] + 1) 
+	#			nUpdate=True
+	#		elif self.netMap[neighbor][0][subnet][1] > self.netMap[router][0][subnet][1] + 1: #if the router you are connected to doesn't have a better router, fix it  
+	#			self.netMap[neighbor][0][subnet] = (router,self.netMap[router][0][subnet][1] + 1)
+	#			nUpdate=True
+	#	if nUpdate:
+	#		self.netMap[neighbor].bUpdates=True #mark it as updated
+	#	self.netMap[router].bUpdated=False #marks current router as no longer advertising
