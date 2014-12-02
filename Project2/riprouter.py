@@ -10,25 +10,35 @@ class Router():
 		"""Equality only checks router ids"""
 		return self.id == other.id #Router ID
 
-	def __init__(self, rid, table = []):
-		self.id = rid #Router ID
+	def __init__(self, rid, table = {}, neighbors = []):
+		self.id = rid #Router ID/KEY
 		self.neighbors = []#List of neighbors
-		self.ripTable = [["Destination Subnet", "Next Router", "Number of Hops"]] #RIP Table
+		self.ripTable = {"Destination Subnet": ["Next Router", "Number of Hops"]} #RIP Table
 		self.ripTableCap = 25 #Maximum number of rows allowed in the RIP Table
 		self.hopCap = 15
+		self.bAdvertising = True
+		self.bUpdated = False
 		if table:
 			for row in table:
-				if len(row) == 3:
-					self.addRipRow(row[0], row[1], row[2] )
+				if len(table[row]) == 2:
+					self.addRipRow(row, table[row][0], table[row][1] )
 		
-	def addRipRow(self, subnet, next, hops):
+	def addRipRow(self, subnet, nextR, hops):
 		"""Adds row to table and updates neighbors if needed"""
 		#ensure table isn't over the cap and that hops are under hopCap
 		if len(self.ripTable) <= self.ripTableCap and hops < self.hopCap:
 			#update neighbors if needed
-			if hops == 1 and next not in self.neighbors:
-				self.neighbors.append(next)
-			self.ripTable.append([subnet, next, hops])
+			if hops == 2 and nextR not in self.neighbors:
+				self.addNeighbor(nextR)
+			self.ripTable[subnet] = [nextR, hops]
 			return True
 		else:
 			return False
+	
+	def addNeighbor(self, neighborID):
+		#add neighbor to list		
+		if neighborID not in self.neighbors:
+			self.neighbors.append(neighborID)
+	def advertise(self, neighbor):
+		#update their tables
+		pass
