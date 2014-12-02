@@ -35,32 +35,31 @@ class NetworkMap(object):
 		"""Will send out advertisements to each of the nodes connected to this."""
 		# for router in netMap:
 		for node in self.netMap[router][1]:
-			nodeupdate=False
+			nodeupdate = False
 			for subnet in self.netMap[router][0]:
 				if subnet not in self.netMap[node][0]:
 					self.netMap[node][0][subnet] = (router,self.netMap[router][0][subnet][1] + 1)
-					nodeupdate=True
-				else:
-					if self.netMap[node][0][subnet][1] > self.netMap[router][0][subnet][1]:
+					nodeupdate = True
+				elif self.netMap[node][0][subnet][1] > self.netMap[router][0][subnet][1]:
 						self.netMap[node][0][subnet] = (router,self.netMap[router][0][subnet][1] + 1)
-						nodeupdate=True
+						nodeupdate = True
 			if nodeupdate:
-				self.netMap[node][3]=True
-		self.netMap[router][2]=False
+				self.netMap[node][3] = True
+		self.netMap[router][2] = False
 
 	def iterate(self):
 		"""Iterate through all of the routers on the network and send one RIP advertisement each."""
 		# Initialize change in router table for this iteration.
 		for router in self.netMap:
-			self.netMap[router][3]=False
-		update=False
+			self.netMap[router][3] = False
+		update = False
 		for router in self.netMap:
 			if self.netMap[router][2]:
 				self.advertise(router)
-				update=True
+				update = True
 		for router in self.netMap:
-			if not self.netMap[router][3]:
-				self.netMap[router][2]=False
+			if self.netMap[router][3]:
+				self.netMap[router][2] = True
 		print self.netMap
 		return update
 
