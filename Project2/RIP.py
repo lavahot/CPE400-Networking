@@ -53,7 +53,9 @@ class NetworkSimulation(object):
 				print neighbor,
 			print("\nTable:"),
 			for row in self.netMap[router].ripTable:
-				print ("\n\t"), 
+				print ("\n\t"),
+				print row,
+				print ("\t"), 
 				for v in self.netMap[router].ripTable[row]:
 					print v,
 					print ("\t"),
