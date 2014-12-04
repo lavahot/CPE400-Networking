@@ -23,19 +23,45 @@ class NetworkSimulation(object):
 			 			 "2": rip.Router("2"),
 			 			 "3": rip.Router("3")}
 		if testIndex == 1:
-			#basic test where everything is accurate
+			#basic test where everything is accurate, once this test is done, 
+			#"3" need to add: "w": ["1", 3]
+			#"2" needs to add "u" : ["1", 2]
 			self.netMap={"1": rip.Router("1", {"u": ["-", 1],
 											   "w": ["2", 2]},
-											   ["2"]
+											   ["2", "3"]
 											   ),
 			 			 "2": rip.Router("2", {"w": ["-", 1]}, ["1"]),
-			 			 "3": rip.Router("3")}
+			 			 "3": rip.Router("3", {"u": ["1", 2]}, ["1"])}
 		if testIndex == 2:
 			#testing for how it handles cycles
 			self.netMap={"1": rip.Router("1"), 
 						 "2": rip.Router("2"), 
 						 "3": rip.Router("3")}
-
+	def printNET(self):
+		for router in self.netMap:
+			#Router IP 
+			#self.neighbors = []#List of neighbor's IP Addresses
+			#self.ripTable = {"Destination Subnet": ["Next Router", "Number of Hops"]} #RIP Table Subnets end in 0
+			#self.bAdvertising = True
+			#self.bUpdated = False
+			#self.bMark = False
+			print("----- Router IP:" + self.netMap[router].ip + " -------")
+			print("Neighbors:")
+			for neighbor in self.netMap[router].neighbors:
+				print("\t"+self.netMap[router].neighbors[neighbor])
+			print("Table:")
+			for row in self.netMap[router].ripTable:
+				print ("\t"), 
+				for v in self.netMap[router].ripTable[row]:
+					print v,
+			print("\nbAdvertising:"),
+			print self.netMap[router].bAdvertising
+			print("bUpdated:"),
+			print self.netMap[router].bUpdated
+			print("bMark:"), 
+			print self.netMap[router].bMark
+			print("----- END of Router Info -------")
+		pass
 	def iterate(self):
 		"""Iterate through all of the routers on the network that are advertising and has each router advertise to each of it's neighbors."""
 		# Initialize change in router table for this iteration.
@@ -56,7 +82,6 @@ class NetworkSimulation(object):
 				#router is done advertising and is marked
 				self.netMap[router].bAdvertising = False
 				self.netMap[router].bMark = True
-		print self.netMap
 		return update
 
 	def mapNet(self):
@@ -80,13 +105,21 @@ class NetworkSimulation(object):
 
 def test():
 	#TESTS
-	print("TEST 0")
+	print("TEST 0-----------------------------------------------")
 	nmap0 = NetworkSimulation(0)
+	print("TEST 0 Print A---------------------------------------")
+	nmap0.printNET()
 	nmap0.mapNet()
+	print("TEST 0 Print B---------------------------------------")
+	nmap0.printNET()
 
-	print("TEST 1")
+	print("TEST 1-----------------------------------------------")
 	nmap1 = NetworkSimulation(1)
+	print("TEST 1 Print A---------------------------------------")
+	nmap0.printNET()
 	nmap1.mapNet()
+	print("TEST 1 Print B---------------------------------------")
+	nmap0.printNET()
 
 def main():
 	test()
