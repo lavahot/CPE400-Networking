@@ -9,10 +9,24 @@ import riprouter as rip
 
 class NetworkSimulation(object):
 	"""Contains all of the nodes in a network."""
-	def __init__(self, netMap=[]):
+	def __init__(self, testIndex, netMap=[]):
 		super(NetworkSimulation, self).__init__()
-		self.netMap={"132.192.192.68": rip.Router("132.192.192.68"), "132.192.192.67": rip.Router("132.192.192.67")}
-		#build a network map
+		#BUILD A NETWORK MAP FOR TESTING
+		if testIndex == 0:
+			#no rip tables
+			self.netMap={"1": rip.Router("1"),
+			 			 "2": rip.Router("2"),
+			 			 "3": rip.Router("3")}
+		if testIndex == 1:
+			#basic test where everything is accurate
+			self.netMap={"1": rip.Router("1"),
+			 			 "2": rip.Router("2"),
+			 			 "3": rip.Router("3")}
+		if testIndex == 2:
+			#testing for how it handles cycles
+			self.netMap={"1": rip.Router("1"), 
+						 "2": rip.Router("2"), 
+						 "3": rip.Router("3")}
 
 	def iterate(self):
 		"""Iterate through all of the routers on the network that are advertising and has each router advertise to each of it's neighbors."""
@@ -56,6 +70,10 @@ class NetworkSimulation(object):
 						advertising = True
 						break
 def main():
-	nmap = NetworkSimulation()
+
+	#TESTS
+	nmap = NetworkSimulation(0)
+	#build all of the RIP tables for each node
+	#nmap.mapNet()
 
 if __name__ == "__main__": main()
