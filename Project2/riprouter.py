@@ -37,23 +37,37 @@ class Router():
 			return False
 	
 	def addNeighbor(self, neighborIP):
+		"""adds the neighborIP to the list of neighbors"""
 		#add neighbor to list		
 		if neighborIP not in self.neighbors:
 			self.neighbors.append(neighborIP)
 	def advertise(self, neighbor):
-		"""Will send out an advertisement to the connected neighbor"""
+		"""Will send out an advertisement to the connected neighbor if that neighbor is in fact a valid neighbor"""
 		#check if neighbor is valid
 		if neighbor.ip in self.neighbors:
 			nUpdate=False #new bool
-
-		pass
+			#foreach destination subnet in the destinations of the router
+			for subnet in self.ripTable:
+				#if this subnet is not in their particular table, it looks into their table and adds a hop
+				if not neighbor.ripTable[subnet]:
+					neighbor.ripTable[subnet] = [self.ip, self.ripTable[subnet][1] + 1]
+					nUpdate = True
+				#if the router you are connected to doesn't have a better route, fix it 
+				elif neighbor.ripTable[subnet][1] > self.ripTable[subnet][1] + 1:
+					neighbor.ripTable[subnet] = [self.ip, self.ripTable[subnet][1] + 1]
+					nUpdate = True
+			#if nUpdate=True
+			if nUpdate:
+				#mark it as updated and set it to advertise
+				neighbor.bUpdated = True
+				neighbor.bAdvertising = True
 
 	#def advertise(self, router):
 	#	for subnet in self.netMap[router][0]: #foreach destination in the dictionary of destinations of the router
 	#		if subnet not in self.netMap[neighbor][0]: #if this subnet is not in their particular table, it looks into their table and adds a hop
 	#			self.netMap[neighbor][0][subnet] = (router,self.netMap[router][0][subnet][1] + 1) 
 	#			nUpdate=True
-	#		elif self.netMap[neighbor][0][subnet][1] > self.netMap[router][0][subnet][1] + 1: #if the router you are connected to doesn't have a better router, fix it  
+	#		elif self.netMap[neighbor][0][subnet][1] > self.netMap[router][0][subnet][1] + 1: #if the router you are connected to doesn't have a better route, fix it  
 	#			self.netMap[neighbor][0][subnet] = (router,self.netMap[router][0][subnet][1] + 1)
 	#			nUpdate=True
 	#	if nUpdate:
