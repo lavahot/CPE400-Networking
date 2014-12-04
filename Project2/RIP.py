@@ -85,6 +85,7 @@ class NetworkSimulation(object):
 						advertising = True
 						break
 def main():
-	i = 1~placeholder
+	i = 1-placeholder
+	print("Regular Main")
 
 if __name__ == "__main__": main()
