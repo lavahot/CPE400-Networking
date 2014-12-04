@@ -24,8 +24,11 @@ class NetworkSimulation(object):
 			 			 "3": rip.Router("3")}
 		if testIndex == 1:
 			#basic test where everything is accurate
-			self.netMap={"1": rip.Router("1"),
-			 			 "2": rip.Router("2"),
+			self.netMap={"1": rip.Router("1", {"u": ["-", 1],
+											   "w": ["2", 2]},
+											   ["2"]
+											   ),
+			 			 "2": rip.Router("2", {"w": ["-", 1]}, ["1"]),
 			 			 "3": rip.Router("3")}
 		if testIndex == 2:
 			#testing for how it handles cycles
