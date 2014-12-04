@@ -20,6 +20,10 @@ class Router():
 		self.bUpdated = False
 		self.bMark = False
 		self.buffer = []#list of packets that represents it's buffer
+		#NOT WORKING
+		if neighbors:
+			for neighbor in neighbors:
+				self.addNeighbor(neighbor)
 		if table:
 			for row in table:
 				if len(table[row]) == 2:
