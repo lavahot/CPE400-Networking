@@ -13,7 +13,7 @@ class NetworkSimulation(object):
 		super(NetworkSimulation, self).__init__()
 		
 		self.testing(index)
-		
+
 	def testing(self, testIndex):
 		#BUILD A NETWORK MAP FOR TESTING
 		if testIndex == 0:
@@ -62,15 +62,15 @@ class NetworkSimulation(object):
 			#unmark all routers
 			for node in self.netMap:
 				self.netMap[node].bMark = False
-			router.bAdvertising = True
-			router.bMark = True
-			advertsing = True
-			while advertising:
-				iterate()
+			self.netMap[router].bAdvertising = True
+			self.netMap[router].bMark = True
+			advertising = True
+			while advertising == True:
+				self.iterate()
 				advertising = False
 				#check if any nodes are advertising
 				for node in self.netMap:
-					if node.bAdvertising:
+					if self.netMap[node].bAdvertising:
 						advertising = True
 						break
 def main():
@@ -78,6 +78,6 @@ def main():
 	#TESTS
 	nmap = NetworkSimulation(0)
 	#build all of the RIP tables for each node
-	#nmap.mapNet()
+	nmap.mapNet()
 
 if __name__ == "__main__": main()
