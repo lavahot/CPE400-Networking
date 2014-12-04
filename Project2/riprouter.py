@@ -66,15 +66,3 @@ class Router():
 				#mark it as updated and set it to advertise
 				neighbor.bUpdated = True
 				neighbor.bAdvertising = True
-
-	#def advertise(self, router):
-	#	for subnet in self.netMap[router][0]: #foreach destination in the dictionary of destinations of the router
-	#		if subnet not in self.netMap[neighbor][0]: #if this subnet is not in their particular table, it looks into their table and adds a hop
-	#			self.netMap[neighbor][0][subnet] = (router,self.netMap[router][0][subnet][1] + 1) 
-	#			nUpdate=True
-	#		elif self.netMap[neighbor][0][subnet][1] > self.netMap[router][0][subnet][1] + 1: #if the router you are connected to doesn't have a better route, fix it  
-	#			self.netMap[neighbor][0][subnet] = (router,self.netMap[router][0][subnet][1] + 1)
-	#			nUpdate=True
-	#	if nUpdate:
-	#		self.netMap[neighbor].bUpdates=True #mark it as updated
-	#	self.netMap[router].bUpdated=False #marks current router as no longer advertising

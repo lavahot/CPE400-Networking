@@ -3,7 +3,7 @@
 #Zachary Carlson
 #Thomas 'Taylor' Mansfield
 #MacCallister Higgins
-#CPE 400 Project 2
+#CPE 400 Project 2 TEST DRIVER
 import random
 import riprouter as rip
 

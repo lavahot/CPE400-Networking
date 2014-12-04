@@ -1,4 +1,9 @@
 #!/usr/bin/python
+
+#Zachary Carlson
+#Thomas 'Taylor' Mansfield
+#MacCallister Higgins
+#CPE 400 Project 2 TEST DRIVER
 import RIP
 import riprouter as rip
 
