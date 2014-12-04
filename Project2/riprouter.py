@@ -18,6 +18,7 @@ class Router():
 		self.hopCap = 15
 		self.bAdvertising = True
 		self.bUpdated = False
+		self.bMark = False
 		self.buffer = []#list of packets that represents it's buffer
 		if table:
 			for row in table:
