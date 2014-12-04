@@ -45,22 +45,26 @@ class NetworkSimulation(object):
 			#self.bAdvertising = True
 			#self.bUpdated = False
 			#self.bMark = False
-			print("----- Router IP:" + self.netMap[router].ip + " -------")
+			print(" ")
+			print("Router IP:" + self.netMap[router].ip + " ---------")
 			print("Neighbors:")
 			for neighbor in self.netMap[router].neighbors:
-				print("\t"+self.netMap[router].neighbors[neighbor])
-			print("Table:")
+				print("\t"),
+				print neighbor,
+			print("\nTable:"),
 			for row in self.netMap[router].ripTable:
-				print ("\t"), 
+				print ("\n\t"), 
 				for v in self.netMap[router].ripTable[row]:
 					print v,
+					print ("\t"),
 			print("\nbAdvertising:"),
 			print self.netMap[router].bAdvertising
 			print("bUpdated:"),
 			print self.netMap[router].bUpdated
 			print("bMark:"), 
 			print self.netMap[router].bMark
-			print("----- END of Router Info -------")
+			print("----------------------------------")
+			print(" ")
 		pass
 	def iterate(self):
 		"""Iterate through all of the routers on the network that are advertising and has each router advertise to each of it's neighbors."""
@@ -105,21 +109,29 @@ class NetworkSimulation(object):
 
 def test():
 	#TESTS
-	print("TEST 0-----------------------------------------------")
+	print("----------------------TEST 0-------------------------------")
 	nmap0 = NetworkSimulation(0)
-	print("TEST 0 Print A---------------------------------------")
+	print("-----------------------------------------------------")
+	print("TEST 0 Print BEFORE---------------------------------")
+	print("-----------------------------------------------------")
 	nmap0.printNET()
 	nmap0.mapNet()
-	print("TEST 0 Print B---------------------------------------")
+	print("-----------------------------------------------------")
+	print("TEST 0 Print AFTER----------------------------------")
+	print("-----------------------------------------------------")
 	nmap0.printNET()
 
-	print("TEST 1-----------------------------------------------")
+	print("----------------------TEST 1------------------------------")
 	nmap1 = NetworkSimulation(1)
-	print("TEST 1 Print A---------------------------------------")
-	nmap0.printNET()
+	print("-----------------------------------------------------")
+	print("TEST 1 Print BEFORE----------------------------------")
+	print("-----------------------------------------------------")
+	nmap1.printNET()
 	nmap1.mapNet()
-	print("TEST 1 Print B---------------------------------------")
-	nmap0.printNET()
+	print("-----------------------------------------------------")
+	print("TEST 1 Print AFTER-----------------------------------")
+	print("-----------------------------------------------------")
+	nmap1.printNET()
 
 def main():
 	test()

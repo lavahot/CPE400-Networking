@@ -10,19 +10,19 @@ class Router():
 		"""Equality only checks router ids"""
 		return self.ip == other.ip #Router IP
 
-	def __init__(self, ip, table = {}, neighbors = []):
+	def __init__(self, ip, table = {}, rNeighbors = []):
 		self.ip = ip #Router IP 
 		self.neighbors = []#List of neighbor's IP Addresses
-		self.ripTable = {"Destination Subnet": ["Next Router", "Number of Hops"]} #RIP Table Subnets end in 0
+		#self.ripTable = {"Destination Subnet": ["Next Router", "Number of Hops"]} #This line causes issues with advertise
+		self.ripTable = {}
 		self.ripTableCap = 25 #Maximum number of rows allowed in the RIP Table
 		self.hopCap = 15
 		self.bAdvertising = True
 		self.bUpdated = False
 		self.bMark = False
 		self.buffer = []#list of packets that represents it's buffer
-		#NOT WORKING
-		if neighbors:
-			for neighbor in neighbors:
+		if rNeighbors:
+			for neighbor in rNeighbors:
 				self.addNeighbor(neighbor)
 		if table:
 			for row in table:
@@ -54,7 +54,7 @@ class Router():
 			#foreach destination subnet in the destinations of the router
 			for subnet in self.ripTable:
 				#if this subnet is not in their particular table, it looks into their table and adds a hop
-				if not neighbor.ripTable[subnet]:
+				if subnet not in neighbor.ripTable.keys():
 					neighbor.ripTable[subnet] = [self.ip, self.ripTable[subnet][1] + 1]
 					nUpdate = True
 				#if the router you are connected to doesn't have a better route, fix it 
