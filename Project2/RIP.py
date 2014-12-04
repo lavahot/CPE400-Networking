@@ -9,8 +9,12 @@ import riprouter as rip
 
 class NetworkSimulation(object):
 	"""Contains all of the nodes in a network."""
-	def __init__(self, testIndex, netMap=[]):
+	def __init__(self, index, netMap=[]):
 		super(NetworkSimulation, self).__init__()
+		
+		self.testing(index)
+		
+	def testing(self, testIndex):
 		#BUILD A NETWORK MAP FOR TESTING
 		if testIndex == 0:
 			#no rip tables
