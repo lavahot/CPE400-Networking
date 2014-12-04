@@ -9,34 +9,10 @@ import riprouter as rip
 
 class NetworkSimulation(object):
 	"""Contains all of the nodes in a network."""
-	def __init__(self, index, netMap=[]):
+	def __init__(self, netMap={}):
 		super(NetworkSimulation, self).__init__()
-		
-		self.testing(index)
+		self.netMap = netMap
 
-	def testing(self, testIndex):
-		#BUILD A NETWORK MAP FOR TESTING
-		#ROUTER CONSTRUCTOR: def __init__(self, ip, table = {}, neighbors = []):
-		if testIndex == 0:
-			#no rip tables
-			self.netMap={"1": rip.Router("1"),
-			 			 "2": rip.Router("2"),
-			 			 "3": rip.Router("3")}
-		if testIndex == 1:
-			#basic test where everything is accurate, once this test is done, 
-			#"3" need to add: "w": ["1", 3]
-			#"2" needs to add "u" : ["1", 2]
-			self.netMap={"1": rip.Router("1", {"u": ["-", 1],
-											   "w": ["2", 2]},
-											   ["2", "3"]
-											   ),
-			 			 "2": rip.Router("2", {"w": ["-", 1]}, ["1"]),
-			 			 "3": rip.Router("3", {"u": ["1", 2]}, ["1"])}
-		if testIndex == 2:
-			#testing for how it handles cycles
-			self.netMap={"1": rip.Router("1"), 
-						 "2": rip.Router("2"), 
-						 "3": rip.Router("3")}
 	def printNET(self):
 		for router in self.netMap:
 			#Router IP 
@@ -108,36 +84,7 @@ class NetworkSimulation(object):
 					if self.netMap[node].bAdvertising:
 						advertising = True
 						break
-
-def test():
-	#TESTS
-	print("----------------------TEST 0-------------------------------")
-	nmap0 = NetworkSimulation(0)
-	print("-----------------------------------------------------")
-	print("TEST 0 Print BEFORE---------------------------------")
-	print("-----------------------------------------------------")
-	nmap0.printNET()
-	nmap0.mapNet()
-	print("-----------------------------------------------------")
-	print("TEST 0 Print AFTER----------------------------------")
-	print("-----------------------------------------------------")
-	nmap0.printNET()
-
-	print("----------------------TEST 1------------------------------")
-	nmap1 = NetworkSimulation(1)
-	print("-----------------------------------------------------")
-	print("TEST 1 Print BEFORE----------------------------------")
-	print("-----------------------------------------------------")
-	nmap1.printNET()
-	nmap1.mapNet()
-	#"3" need to add: "w": ["1", 3]
-	#"2" needs to add "u" : ["1", 2]
-	print("-----------------------------------------------------")
-	print("TEST 1 Print AFTER-----------------------------------")
-	print("-----------------------------------------------------")
-	nmap1.printNET()
-
 def main():
-	test()
+	i = 1~placeholder
 
 if __name__ == "__main__": main()
