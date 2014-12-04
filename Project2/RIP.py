@@ -16,6 +16,7 @@ class NetworkSimulation(object):
 
 	def testing(self, testIndex):
 		#BUILD A NETWORK MAP FOR TESTING
+		#ROUTER CONSTRUCTOR: def __init__(self, ip, table = {}, neighbors = []):
 		if testIndex == 0:
 			#no rip tables
 			self.netMap={"1": rip.Router("1"),
@@ -73,11 +74,18 @@ class NetworkSimulation(object):
 					if self.netMap[node].bAdvertising:
 						advertising = True
 						break
-def main():
 
+def test():
 	#TESTS
-	nmap = NetworkSimulation(0)
-	#build all of the RIP tables for each node
-	nmap.mapNet()
+	print("TEST 0")
+	nmap0 = NetworkSimulation(0)
+	nmap0.mapNet()
+
+	print("TEST 1")
+	nmap1 = NetworkSimulation(1)
+	nmap1.mapNet()
+
+def main():
+	test()
 
 if __name__ == "__main__": main()
