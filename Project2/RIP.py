@@ -15,12 +15,12 @@ class NetworkSimulation(object):
 
 	def printNET(self):
 		for router in self.netMap:
-			#Router IP 
-			#self.neighbors = []#List of neighbor's IP Addresses
-			#self.ripTable = {"Destination Subnet": ["Next Router", "Number of Hops"]} #RIP Table Subnets end in 0
-			#self.bAdvertising = True
-			#self.bUpdated = False
-			#self.bMark = False
+			#Router IP
+			#neighbors = []
+			#ripTable = {"Destination Subnet": ["Next Router", "Number of Hops"]}
+			#bAdvertising
+			#bUpdated
+			#bMark
 			print(" ")
 			print("Router IP:" + self.netMap[router].ip + " ---------")
 			print("Neighbors:")
