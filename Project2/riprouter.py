@@ -8,7 +8,25 @@ class Router():
 	"""Router Class"""
 	def __eq__(self, other):
 		"""Equality only checks router ids"""
-		return self.ip == other.ip #Router IP
+		if self.ip != other.ip: #Router IP
+			return False
+		if self.neighbors != other.neighbors:
+			return False
+		if self.ripTable != other.ripTable:
+			return False
+		if self.ripTableCap != other.ripTableCap:
+			return False
+		if self.hopCap != other.hopCap:
+			return False
+		if self.buffer != other.buffer:
+			return False
+		#if self.bAdvertising != other.bAdvertising:
+		#	return False
+		#if self.bUpdated != other.bUpdated:
+		#	return False
+		#if self.bMark != other.bMark:
+		#	return False
+		return True
 
 	def __init__(self, ip, table = {}, rNeighbors = []):
 		self.ip = ip #Router IP 
@@ -42,10 +60,15 @@ class Router():
 			return False
 	
 	def addNeighbor(self, neighborIP):
-		"""adds the neighborIP to the list of neighbors"""
+		"""adds the neighborIP to the list of neighbors, does not affect tables"""
 		#add neighbor to list		
 		if neighborIP not in self.neighbors:
 			self.neighbors.append(neighborIP)
+	def removeNeighbor(self, neighborIP):
+		"""removes the neighborIP from the list of neighbors, does not affect tables"""
+		#add neighbor to list		
+		if neighborIP in self.neighbors:
+			self.neighbors.remove(neighborIP)
 	def advertise(self, neighbor):
 		"""Will send out an advertisement to the connected neighbor if that neighbor is in fact a valid neighbor"""
 		#check if neighbor is valid

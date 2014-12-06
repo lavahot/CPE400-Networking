@@ -80,7 +80,7 @@ class NetworkSimulation(object):
 			advertising = True
 			while advertising == True:
 				self.iterate()
-				self.printNET()
+				#self.printNET()
 				advertising = False
 				#check if any nodes are advertising
 				for node in self.netMap:
@@ -88,6 +88,10 @@ class NetworkSimulation(object):
 						advertising = True
 						break
 
+	def breakConnection(self, routerA_IP, routerB_IP):
+		"""Takes two router IP addresses and makes sure they are no longer neighbors"""
+		self.netMap[routerA_IP].removeNeighbor(routerB_IP)
+		self.netMap[routerB_IP].removeNeighbor(routerA_IP)
 def main():
 	print("Begin entering router data. When you are finished with any section, enter nothing and hit enter.")
 	nmap = NetworkSimulation()
