@@ -6,6 +6,7 @@
 #CPE 400 Project 2 TEST DRIVER
 import random
 import riprouter as rip
+from random import randint
 
 class NetworkSimulation(object):
 	"""Contains all of the nodes in a network."""
@@ -92,6 +93,22 @@ class NetworkSimulation(object):
 		"""Takes two router IP addresses and makes sure they are no longer neighbors"""
 		self.netMap[routerA_IP].removeNeighbor(routerB_IP)
 		self.netMap[routerB_IP].removeNeighbor(routerA_IP)
+
+	def randomBreakConnection(self):
+		"""Randomly picks a router and randomly breaks one of it's neighboring connection"""
+		ableBreak = False
+		#Make sure it is possible to break a connection
+		for router in self.netMap:
+			if self.netMap[router].neighbors:
+				ableBreak = True
+		#loop until a router has been randomly selected and has a neighbor to delete
+		selected = False
+		while ableBreak == True and selected == False:
+			for router in self.netMap:
+				if randint(1,9) < 3 and self.netMap[router].neighbors:
+					self.breakConnection(router, self.netMap[router].neighbors[0])
+					selected = True
+					break
 def main():
 	print("Begin entering router data. When you are finished with any section, enter nothing and hit enter.")
 	nmap = NetworkSimulation()

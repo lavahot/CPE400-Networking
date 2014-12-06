@@ -94,6 +94,34 @@ def testSummary(printing):
 		   	print("PASS")
 		else:
 			print("FAIL")
+	#TEST 3
+	print("----------------------TEST 3------------------------------")
+	nmap3 = RIP.NetworkSimulation(
+		{"1": rip.Router("1", {}, ["2"]),
+		 "2": rip.Router("2", {}, ["1"])}
+		 )
+	if printing == True:
+		print("-----------------------------------------------------")
+		print("TEST 2 Print BEFORE----------------------------------")
+		print("-----------------------------------------------------")
+		nmap3.printNET()
+	nmap3.mapNet()
+	nmap3.randomBreakConnection()
+	if printing == True:
+		print("-----------------------------------------------------")
+		print("TEST 2 Print AFTER-----------------------------------")
+		print("-----------------------------------------------------")
+		#1 and 2 should have no neighbors
+		nmap3.printNET()
+	#NOT PRINTING
+	if printing == False:
+		nmap3comparison = RIP.NetworkSimulation({"1": rip.Router("1", {}, []),
+			 			 		   				 "2": rip.Router("2", {}, []),
+			 			 		   				 })
+		if nmap3.netMap == nmap3comparison.netMap:
+		   	print("PASS")
+		else:
+			print("FAIL")
 
 	
 def main():
