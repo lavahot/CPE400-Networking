@@ -12,7 +12,7 @@ class Router():
 
 	def __init__(self, ip, table = {}, rNeighbors = []):
 		self.ip = ip #Router IP 
-		self.neighbors = []#List of neighbor's IP Addresses
+		self.neighbors = [] #List of neighbor's IP Addresses
 		#self.ripTable = {"Destination Subnet": ["Next Router", "Number of Hops"]} #This line causes issues with advertise
 		self.ripTable = {}
 		self.ripTableCap = 25 #Maximum number of rows allowed in the RIP Table

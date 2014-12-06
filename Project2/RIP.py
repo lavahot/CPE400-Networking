@@ -35,15 +35,17 @@ class NetworkSimulation(object):
 				for v in self.netMap[router].ripTable[row]:
 					print v,
 					print ("\t"),
-			print("\nbAdvertising:"),
-			print self.netMap[router].bAdvertising
-			print("bUpdated:"),
-			print self.netMap[router].bUpdated
-			print("bMark:"), 
-			print self.netMap[router].bMark
+			print ("\n"),
+			# print("bAdvertising:"),
+			# print self.netMap[router].bAdvertising
+			# print("bUpdated:"),
+			# print self.netMap[router].bUpdated
+			# print("bMark:"), 
+			# print self.netMap[router].bMark
 			print("----------------------------------")
-			print(" ")
-		pass
+			# print(" ")
+		print("----------------------------------")
+	
 	def iterate(self):
 		"""Iterate through all of the routers on the network that are advertising and has each router advertise to each of it's neighbors."""
 		# Initialize change in router table for this iteration.
@@ -78,13 +80,42 @@ class NetworkSimulation(object):
 			advertising = True
 			while advertising == True:
 				self.iterate()
+				self.printNET()
 				advertising = False
 				#check if any nodes are advertising
 				for node in self.netMap:
 					if self.netMap[node].bAdvertising:
 						advertising = True
 						break
+
 def main():
-	print("Regular Main")
+	print("Begin entering router data. When you are finished with any section, enter nothing and hit enter.")
+	nmap = NetworkSimulation()
+	rfinished = False
+	while(not rfinished):
+		router = raw_input('Enter router name: ')
+		if not router:
+			rfinished = True
+			break
+		else:
+			nfinished = False
+		while(not nfinished):
+			subnet=''
+			subnet=raw_input('Enter directly connected subnet name: ')
+			if(not subnet):
+				nfinished = True
+				break
+			subnets={subnet: ["-", 1]}
+		nfinished=False
+		attached=[]
+		while(not nfinished):
+			attach=raw_input('Enter directly connected router name: ')
+			if not attach:
+				nfinished = True
+				break
+			attached.append(attach)
+		nmap.netMap[router] = rip.Router(router, subnets, attached)
+	nmap.printNET()
+	nmap.mapNet()
 
 if __name__ == "__main__": main()
