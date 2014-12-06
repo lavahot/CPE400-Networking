@@ -102,14 +102,14 @@ def testSummary(printing):
 		 )
 	if printing == True:
 		print("-----------------------------------------------------")
-		print("TEST 2 Print BEFORE----------------------------------")
+		print("TEST 3 Print BEFORE----------------------------------")
 		print("-----------------------------------------------------")
 		nmap3.printNET()
 	nmap3.mapNet()
 	nmap3.randomBreakConnection()
 	if printing == True:
 		print("-----------------------------------------------------")
-		print("TEST 2 Print AFTER-----------------------------------")
+		print("TEST 3 Print AFTER-----------------------------------")
 		print("-----------------------------------------------------")
 		#1 and 2 should have no neighbors
 		nmap3.printNET()
