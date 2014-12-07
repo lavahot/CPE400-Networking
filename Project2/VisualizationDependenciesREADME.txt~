@@ -6,4 +6,4 @@ matplotlib (sudo pip install matplotlib)
 
 From the terminal run the following command:
 
-sudo apt-get install python-networkx
+$ sudo apt-get install python-networkx

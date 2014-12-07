@@ -10,6 +10,50 @@ import riprouter as rip
 import networkx as nx
 import matplotlib.pyplot as plt
 
+graph = nx.Graph()
+
+#######################################################################################
+#######################################################################################
+
+def convert(routerD):	# Converts router list/dictionary into usable graph
+
+	# Iterate through dictionary
+	for key in routerD:
+		# Add nodes
+		graph.add_node(routerD[key])
+		# Add edges
+		#for index in (routerD[key].neighbors):
+			#graph.add_edge(routerD[key],(routerD[key]).neighbors[index])
+
+#######################################################################################
+#######################################################################################
+
+def draw_graph(graph):	# Draws resulting graph from previous function
+
+    # extract nodes from graph
+    #nodes = set([n1 for n1, n2 in graph] + [n2 for n1, n2 in graph])
+
+    # create networkx graph
+    #G=nx.Graph()
+
+    # add nodes
+    #for node in nodes:
+        #G.add_node(node)
+
+    # add edges
+    #for edge in graph:
+        #G.add_edge(edge[0], edge[1])
+
+    # draw graph
+    pos = nx.shell_layout(graph)
+    nx.draw(graph, pos)
+
+    # show graph
+    plt.show()
+
+#######################################################################################
+#######################################################################################
+
 def testSummary(printing):
 	#TESTS
 	#TEST 0: No data
@@ -67,7 +111,6 @@ def testSummary(printing):
 		   	print("PASS")
 		else:
 			print("FAIL")
-
 	#TEST 2
 	print("----------------------TEST 2------------------------------")
 	nmap2 = RIP.NetworkSimulation(
@@ -125,9 +168,29 @@ def testSummary(printing):
 		   	print("PASS")
 		else:
 			print("FAIL")
-
+#######################################################################################
+#######################################################################################
 	
 def main():
-	testSummary(False)
+	#testSummary(False)
+
+	# Intializations
+	nmap0 = RIP.NetworkSimulation({"1": rip.Router("192.168.1.1"), "2": rip.Router("2"), "3": rip.Router("3")})
+	nmap1 = RIP.NetworkSimulation(
+		{"1": rip.Router("1", {"u": ["-", 1]}, ["2", "3"]),
+		 "2": rip.Router("2", {"w": ["-", 1]}, ["1"]),
+		 "3": rip.Router("3", {}, ["1"])}
+		 )
+
+	# Convert router dictionary to graph
+	convert(nmap1.netMap)
+
+	# Draw Graph
+	#graph = [(nmap0.netMap["1"].ip, 21),(21, 22),(21, 23), (23, 24),(24, 25), (25, nmap0.netMap["1"].ip)]
+	draw_graph(graph)
+
+	# Wait for subnet kill
+
+	# Generate random subnet kill based on likelihood
 
 if __name__ == "__main__": main()

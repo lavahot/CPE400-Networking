@@ -8,7 +8,7 @@ class Router():
 
 	# Needed for graphing (dictionaries are unhashable)
 	def __hash__(self):
-		return id(self)
+		return self.ip
 
 	"""Router Class"""
 	def __eq__(self, other):
