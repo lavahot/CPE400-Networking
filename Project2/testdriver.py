@@ -22,8 +22,8 @@ def convert(routerD):	# Converts router list/dictionary into usable graph
 		# Add nodes
 		graph.add_node(routerD[key])
 		# Add edges
-		#for index in (routerD[key].neighbors):
-			#graph.add_edge(routerD[key],(routerD[key]).neighbors[index])
+		for index in range(len(routerD[key].neighbors)):
+			graph.add_edge(routerD[key],(routerD[key].neighbors[index]))
 
 #######################################################################################
 #######################################################################################
