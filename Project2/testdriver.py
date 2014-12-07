@@ -148,8 +148,8 @@ def testSummary(printing):
 	#TEST 3
 	print("----------------------TEST 3------------------------------")
 	nmap3 = RIP.NetworkSimulation(
-		{"1": rip.Router("1", {}, ["2"]),
-		 "2": rip.Router("2", {}, ["1"])}
+		{"1": rip.Router("1", {"u":["2", 0]}, ["2"]),
+		 "2": rip.Router("2", {"u":["-", 1]}, ["1"])}
 		 )
 	if printing == True:
 		print("-----------------------------------------------------")
@@ -167,7 +167,7 @@ def testSummary(printing):
 	#NOT PRINTING
 	if printing == False:
 		nmap3comparison = RIP.NetworkSimulation({"1": rip.Router("1", {}, []),
-			 			 		   				 "2": rip.Router("2", {}, []),
+			 			 		   				 "2": rip.Router("2", {"u":["-", 1]}, []),
 			 			 		   				 })
 		if nmap3.netMap == nmap3comparison.netMap:
 		   	print("PASS")
@@ -177,7 +177,7 @@ def testSummary(printing):
 #######################################################################################
 	
 def main():
-	#testSummary(False)
+	testSummary(False)
 
 	# Intializations
 	nmap0 = RIP.NetworkSimulation({"1": rip.Router("192.168.1.1"), "2": rip.Router("2"), "3": rip.Router("3")})

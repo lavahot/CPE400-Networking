@@ -70,15 +70,25 @@ class Router():
 		if neighborIP not in self.neighbors:
 			self.neighbors.append(neighborIP)
 	def removeNeighbor(self, neighborIP):
-		"""removes the neighborIP from the list of neighbors, does not affect tables"""
+		"""removes the neighborIP from the list of neighbors, and updates tables"""
 		#add neighbor to list		
 		if neighborIP in self.neighbors:
 			self.neighbors.remove(neighborIP)
+		#iterate through table and build a new table where next router is != neighborIP
+		newTable = {}
+		for row in self.ripTable:
+			if self.ripTable[row][0] != neighborIP:
+				newTable[row] = self.ripTable[row]
+		self.ripTable = newTable
 	def advertise(self, neighbor):
 		"""Will send out an advertisement to the connected neighbor if that neighbor is in fact a valid neighbor"""
 		#check if neighbor is valid
 		if neighbor.ip in self.neighbors:
 			nUpdate=False #new bool
+			#TO DO:foreach row in neighbor.ripTable that has self as next router
+				
+				#TO DO:if a subnet doesn't exist in your table, remove their row
+				
 			#foreach destination subnet in the destinations of the router
 			for subnet in self.ripTable:
 				#if this subnet is not in their particular table, it looks into their table and adds a hop
