@@ -10,20 +10,25 @@ import riprouter as rip
 import networkx as nx
 import matplotlib.pyplot as plt
 
-graph = nx.Graph()
 
 #######################################################################################
 #######################################################################################
 
 def convert(routerD):	# Converts router list/dictionary into usable graph
 
+	# Initializations
+	graph = nx.Graph()
+
 	# Iterate through dictionary
 	for key in routerD:
 		# Add nodes
-		graph.add_node(routerD[key])
+		graph.add_node(routerD[key].ip)
 		# Add edges
 		for index in range(len(routerD[key].neighbors)):
-			graph.add_edge(routerD[key],(routerD[key].neighbors[index]))
+			graph.add_edge(routerD[key].ip,(routerD[key].neighbors[index]))
+
+	# Return converted graph
+	return graph
 
 #######################################################################################
 #######################################################################################
@@ -181,13 +186,28 @@ def main():
 		 "2": rip.Router("2", {"w": ["-", 1]}, ["1"]),
 		 "3": rip.Router("3", {}, ["1"])}
 		 )
+	nmap2 = RIP.NetworkSimulation(
+		{"1": rip.Router("1", {}, ["2"]),
+		 "2": rip.Router("2", {}, ["1"]),
+		 "3": rip.Router("3", {}, ["1", "2"])}
+		 )
+	nmap3 = RIP.NetworkSimulation(
+		{"1": rip.Router("1", {}, ["2"]),
+		 "2": rip.Router("2", {}, ["1"])}
+		 )
 
 	# Convert router dictionary to graph
-	convert(nmap1.netMap)
+	g1 = convert(nmap0.netMap)
+	g2 = convert(nmap1.netMap)
+	g3 = convert(nmap2.netMap)
+	g4 = convert(nmap3.netMap)
 
 	# Draw Graph
 	#graph = [(nmap0.netMap["1"].ip, 21),(21, 22),(21, 23), (23, 24),(24, 25), (25, nmap0.netMap["1"].ip)]
-	draw_graph(graph)
+	draw_graph(g1)
+	draw_graph(g2)
+	draw_graph(g3)
+	draw_graph(g4)
 
 	# Wait for subnet kill
 
