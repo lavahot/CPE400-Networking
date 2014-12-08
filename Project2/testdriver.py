@@ -14,6 +14,21 @@ import matplotlib.pyplot as plt
 #######################################################################################
 #######################################################################################
 
+# Usage example: drawNet(nmap5)
+
+def drawNet(routerD):	# Draws Network Figure using only 1 Line
+
+	# Initializations
+
+	# Build Graph from Dictionary
+	g = convert(routerD.netMap)
+
+	# Draw
+	draw_graph(g)
+
+#######################################################################################
+#######################################################################################
+
 def convert(routerD):	# Converts router list/dictionary into usable graph
 
 	# Initializations
@@ -214,6 +229,7 @@ def testSummary(printing):
 		 "E": rip.Router("E", {"z":["-", 1]}, ["D", "A"])
 		 })
 	nmap5.mapNet()
+	drawNet(nmap5)
 	if printing == True:
 		print("-----------------------------------------------------")
 		print("TEST 5 Print BEFORE Break----------------------------")
