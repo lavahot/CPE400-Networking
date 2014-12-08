@@ -10,6 +10,9 @@ import riprouter as rip
 import networkx as nx
 import matplotlib.pyplot as plt
 
+# Global Lists
+subnet=[]
+router=[]
 
 #######################################################################################
 #######################################################################################
@@ -18,13 +21,15 @@ import matplotlib.pyplot as plt
 
 def drawNet(routerD):	# Draws Network Figure using only 1 Line
 
-	# Initializations
+	# Initializations (Clear lists)
+	del subnet[:]
+	del router[:]
 
 	# Build Graph from Dictionary
 	g = convert(routerD.netMap)
 
 	# Draw
-	draw_graph(g)
+	draw_graph(g,routerD.netMap)
 
 #######################################################################################
 #######################################################################################
@@ -37,10 +42,18 @@ def convert(routerD):	# Converts router list/dictionary into usable graph
 	# Iterate through dictionary
 	for key in routerD:
 		# Add nodes
-		graph.add_node(routerD[key].ip)
+		graph.add_node(routerD[key].ip,node_color="b")
+		router.append(routerD[key].ip)
+		# Add subnets
+		subnets = (routerD[key].ripTable).viewkeys()
+		for n in subnets:
+			if routerD[key].ripTable[n][1] == 1:
+				graph.add_node(n,node_color="r")
+				graph.add_edge(routerD[key].ip,n,subnet=1)
+				subnet.append(n)
 		# Add edges
 		for index in range(len(routerD[key].neighbors)):
-			graph.add_edge(routerD[key].ip,(routerD[key].neighbors[index]))
+			graph.add_edge(routerD[key].ip,(routerD[key].neighbors[index]),subnet=0)
 
 	# Return converted graph
 	return graph
@@ -48,28 +61,22 @@ def convert(routerD):	# Converts router list/dictionary into usable graph
 #######################################################################################
 #######################################################################################
 
-def draw_graph(graph):	# Draws resulting graph from previous function
+def draw_graph(graph,routerD):	# Draws resulting graph from previous function
 
-    # extract nodes from graph
-    #nodes = set([n1 for n1, n2 in graph] + [n2 for n1, n2 in graph])
+	# draw graph
+	pos = nx.shell_layout(graph)
 
-    # create networkx graph
-    #G=nx.Graph()
+	#nx.draw_graphviz(graph,)
+	#nx.draw(graph, pos, with_labels=True)
+	
+	nx.draw_networkx_nodes(graph,pos,with_labels=False, ax=None, label="Subnet", nodelist=subnet, node_color="g")
+	nx.draw_networkx_nodes(graph,pos,with_labels=False, ax=None, label ="Router",nodelist=router, node_color="r")
+	nx.draw_networkx_edges(graph,pos)
+	nx.draw_networkx_labels(graph,pos)
+	plt.axis('off')
 
-    # add nodes
-    #for node in nodes:
-        #G.add_node(node)
-
-    # add edges
-    #for edge in graph:
-        #G.add_edge(edge[0], edge[1])
-
-    # draw graph
-    pos = nx.shell_layout(graph)
-    nx.draw(graph, pos)
-
-    # show graph
-    plt.show()
+	# show graph
+	plt.show()
 
 #######################################################################################
 #######################################################################################
@@ -86,6 +93,7 @@ def testSummary(printing):
 		print("TEST 0 Print BEFORE---------------------------------")
 		print("-----------------------------------------------------")
 		nmap0.printNET()
+		drawNet(nmap0)
 	
 	nmap0.mapNet()
 	if printing == True:
@@ -93,6 +101,7 @@ def testSummary(printing):
 		print("TEST 0 Print AFTER----------------------------------")
 		print("-----------------------------------------------------")
 		nmap0.printNET()
+		drawNet(nmap0)
 	#NOT PRINTING
 	if printing == False:
 		nmap0comparison = RIP.NetworkSimulation({"1": rip.Router("1"),
@@ -114,6 +123,7 @@ def testSummary(printing):
 		print("TEST 1 Print BEFORE----------------------------------")
 		print("-----------------------------------------------------")
 		nmap1.printNET()
+		drawNet(nmap1)
 	nmap1.mapNet()
 	#"3" need to add: "w": ["1", 3]
 	#"2" needs to add "u" : ["1", 2]
@@ -122,6 +132,7 @@ def testSummary(printing):
 		print("TEST 1 Print AFTER-----------------------------------")
 		print("-----------------------------------------------------")
 		nmap1.printNET()
+		drawNet(nmap1)
 	#NOT PRINTING
 	if printing == False:
 		nmap1comparison = RIP.NetworkSimulation({"1": rip.Router("1", {"u": ["-", 1], "w": ["2", 2]}, ["2", "3"]),
@@ -143,6 +154,7 @@ def testSummary(printing):
 		print("TEST 2 Print BEFORE----------------------------------")
 		print("-----------------------------------------------------")
 		nmap2.printNET()
+		drawNet(nmap2)
 	nmap2.mapNet()
 	nmap2.breakConnection("1", "2")
 	if printing == True:
@@ -151,6 +163,7 @@ def testSummary(printing):
 		print("-----------------------------------------------------")
 		#1 and 2 should have no neighbors
 		nmap2.printNET()
+		drawNet(nmap2)
 	#NOT PRINTING
 	if printing == False:
 		nmap2comparison = RIP.NetworkSimulation({"1": rip.Router("1", {}, ["3"]),
@@ -171,6 +184,7 @@ def testSummary(printing):
 		print("TEST 3 Print BEFORE----------------------------------")
 		print("-----------------------------------------------------")
 		nmap3.printNET()
+		drawNet(nmap3)
 	nmap3.mapNet()
 	nmap3.randomBreakConnection()
 	if printing == True:
@@ -179,6 +193,7 @@ def testSummary(printing):
 		print("-----------------------------------------------------")
 		#1 and 2 should have no neighbors
 		nmap3.printNET()
+		drawNet(nmap3)
 	#NOT PRINTING
 	if printing == False:
 		nmap3comparison = RIP.NetworkSimulation({"1": rip.Router("1", {}, []),
@@ -200,6 +215,7 @@ def testSummary(printing):
 		print("TEST 4 Print BEFORE----------------------------------")
 		print("-----------------------------------------------------")
 		nmap4.printNET()
+		drawNet(nmap4)
 	nmap4.breakConnection("1", "2")
 	nmap4.mapNet()
 	if printing == True:
@@ -208,6 +224,7 @@ def testSummary(printing):
 		print("-----------------------------------------------------")
 		#1 and 2 should have no neighbors
 		nmap4.printNET()
+		drawNet(nmap4)
 	#NOT PRINTING
 	if printing == False:
 		nmap4comparison = RIP.NetworkSimulation(
@@ -229,12 +246,12 @@ def testSummary(printing):
 		 "E": rip.Router("E", {"z":["-", 1]}, ["D", "A"])
 		 })
 	nmap5.mapNet()
-	drawNet(nmap5)
 	if printing == True:
 		print("-----------------------------------------------------")
 		print("TEST 5 Print BEFORE Break----------------------------")
 		print("-----------------------------------------------------")
 		nmap5.printNET()
+		drawNet(nmap5)
 	nmap5.breakConnection("A", "E")
 	nmap5.mapNet()
 	if printing == True:
@@ -242,6 +259,7 @@ def testSummary(printing):
 		print("TEST 5 Print AFTER Breaks----------------------------")
 		print("-----------------------------------------------------")
 		nmap5.printNET()
+		drawNet(nmap5)
 	#PASS OR FAIL SETTING
 	if printing == False:
 		nmap5comparison = RIP.NetworkSimulation(
@@ -325,7 +343,7 @@ def figurePrint():
 	# Generate random subnet kill based on likelihood
 
 def main():
-	testSummary(False)
+	testSummary(True)
 
 	
 if __name__ == "__main__": main()
