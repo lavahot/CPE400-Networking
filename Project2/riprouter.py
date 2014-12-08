@@ -84,33 +84,27 @@ class Router():
 		"""Will send out an advertisement to the connected neighbor if that neighbor is in fact a valid neighbor"""
 		#check if neighbor is valid
 		if neighbor.ip in self.neighbors and self.ip in neighbor.neighbors:
-			nUpdate=False #new bool
-			#foreach row in neighbor.ripTable
 			newTable = {}
-			for row in neighbor.ripTable:
+			for subnet in neighbor.ripTable:
 				#if that table's next router is not this router, add it to the new table
-				if neighbor.ripTable[row][0] != self.ip:
-					newTable[row] = neighbor.ripTable[row]	
+				if neighbor.ripTable[subnet][0] != self.ip:
+					newTable[subnet] = neighbor.ripTable[subnet]
 				#if our router's table has the subnet, add it to the new table
-				elif row in self.ripTable.keys():
-					newTable[row] = neighbor.ripTable[row]
+				elif subnet in self.ripTable.keys():
+					newTable[subnet] = neighbor.ripTable[subnet]
 			#set new table
 			neighbor.ripTable = newTable
-			#foreach destination subnet in the destinations of the router
+			#foreach destination subnet in the destinations of this router
 			for subnet in self.ripTable:
 				#if this subnet is not in their particular table, it looks into their table and adds a hop
 				if subnet not in neighbor.ripTable.keys():
 					neighbor.ripTable[subnet] = [self.ip, self.ripTable[subnet][1] + 1]
-					nUpdate = True
-				#if the router you are connected to doesn't have a better route, fix it 
-				elif neighbor.ripTable[subnet][1] > self.ripTable[subnet][1] + 1:
+				#if the neighbor self is connected to doesn't have a better route and self's soluton doesn't go through the neighbor with the better route 
+				elif neighbor.ripTable[subnet][1] > self.ripTable[subnet][1] + 1 and neighbor.ripTable[subnet][0] != self.ip:
 					neighbor.ripTable[subnet] = [self.ip, self.ripTable[subnet][1] + 1]
-					nUpdate = True
 			#if nUpdate=True
-			if nUpdate:
-				#mark it as updated and set it to advertise
-				neighbor.bUpdated = True
-				neighbor.bAdvertising = True
+			neighbor.bUpdated = True
+			neighbor.bAdvertising = True
 		#if self thinks it has a connection but the conencted router doesn't have a connection to self
 		elif neighbor.ip in self.neighbors:
 			self.removeNeighbor(neighbor.ip)

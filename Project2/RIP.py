@@ -52,22 +52,18 @@ class NetworkSimulation(object):
 		# Initialize change in router table for this iteration.
 		for router in self.netMap:
 			self.netMap[router].bUpdated=False
-		update=False
 		#for each router
 		for router in self.netMap:
 			#if the router is advertising
-			if self.netMap[router].bAdvertising:
+			if self.netMap[router].bAdvertising == True:
 				#for each neighbor ip address
 				for r in self.netMap[router].neighbors:
 					#advertise to that neighbor if that neighbor has not already advertised
-					if not self.netMap[r].bMark:
+					if self.netMap[r].bMark == False:
 						self.netMap[router].advertise(self.netMap[r])
-					if self.netMap[r].bUpdated:
-						update=True # we updated at least 1 neighbor's table
 				#router is done advertising and is marked
 				self.netMap[router].bAdvertising = False
 				self.netMap[router].bMark = True
-		return update
 
 	def mapNet(self):
 		"""Map the entire network until there are no updates to the routing tables."""
@@ -85,7 +81,7 @@ class NetworkSimulation(object):
 				advertising = False
 				#check if any nodes are advertising
 				for node in self.netMap:
-					if self.netMap[node].bAdvertising:
+					if self.netMap[node].bAdvertising == True:
 						advertising = True
 						break
 
