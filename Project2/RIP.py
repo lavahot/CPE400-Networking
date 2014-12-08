@@ -59,30 +59,29 @@ class NetworkSimulation(object):
 				#for each neighbor ip address
 				for r in self.netMap[router].neighbors:
 					#advertise to that neighbor if that neighbor has not already advertised
-					if self.netMap[r].bMark == False:
-						self.netMap[router].advertise(self.netMap[r])
+					self.netMap[router].advertise(self.netMap[r])
 				#router is done advertising and is marked
 				self.netMap[router].bAdvertising = False
 				self.netMap[router].bMark = True
 
 	def mapNet(self):
 		"""Map the entire network until there are no updates to the routing tables."""
+		#unmark all routers
+		for node in self.netMap:
+			self.netMap[node].bMark = False
 		#each router takes turns mapping
 		for router in self.netMap:
-			#unmark all routers
-			for node in self.netMap:
-				self.netMap[node].bMark = False
 			self.netMap[router].bAdvertising = True
 			self.netMap[router].bMark = True
-			advertising = True
-			while advertising == True:
+			loop = True
+			while loop == True:
 				self.iterate()
 				#self.printNET()
-				advertising = False
+				loop = False
 				#check if any nodes are advertising
 				for node in self.netMap:
-					if self.netMap[node].bAdvertising == True:
-						advertising = True
+					if self.netMap[node].bMark != True:
+						loop = True
 						break
 
 	def breakConnection(self, routerA_IP, routerB_IP):
