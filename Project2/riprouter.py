@@ -83,12 +83,19 @@ class Router():
 	def advertise(self, neighbor):
 		"""Will send out an advertisement to the connected neighbor if that neighbor is in fact a valid neighbor"""
 		#check if neighbor is valid
-		if neighbor.ip in self.neighbors:
+		if neighbor.ip in self.neighbors and self.ip in neighbor.neighbors:
 			nUpdate=False #new bool
-			#TO DO:foreach row in neighbor.ripTable that has self as next router
-				
-				#TO DO:if a subnet doesn't exist in your table, remove their row
-				
+			#foreach row in neighbor.ripTable
+			newTable = {}
+			for row in neighbor.ripTable:
+				#if that table's next router is not this router, add it to the new table
+				if neighbor.ripTable[row][0] != self.ip:
+					newTable[row] = neighbor.ripTable[row]	
+				#if our router's table has the subnet, add it to the new table
+				elif row in self.ripTable.keys():
+					newTable[row] = neighbor.ripTable[row]
+			#set new table
+			neighbor.ripTable = newTable
 			#foreach destination subnet in the destinations of the router
 			for subnet in self.ripTable:
 				#if this subnet is not in their particular table, it looks into their table and adds a hop
@@ -104,3 +111,6 @@ class Router():
 				#mark it as updated and set it to advertise
 				neighbor.bUpdated = True
 				neighbor.bAdvertising = True
+		#if self thinks it has a connection but the conencted router doesn't have a connection to self
+		elif neighbor.ip in self.neighbors:
+			self.removeNeighbor(neighbor.ip)

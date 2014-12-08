@@ -119,8 +119,8 @@ def testSummary(printing):
 	#TEST 2
 	print("----------------------TEST 2------------------------------")
 	nmap2 = RIP.NetworkSimulation(
-		{"1": rip.Router("1", {}, ["2"]),
-		 "2": rip.Router("2", {}, ["1"]),
+		{"1": rip.Router("1", {}, ["2", "3"]),
+		 "2": rip.Router("2", {}, ["1", "3"]),
 		 "3": rip.Router("3", {}, ["1", "2"])}
 		 )
 	if printing == True:
@@ -138,8 +138,8 @@ def testSummary(printing):
 		nmap2.printNET()
 	#NOT PRINTING
 	if printing == False:
-		nmap2comparison = RIP.NetworkSimulation({"1": rip.Router("1", {}, []),
-			 			 		   				 "2": rip.Router("2", {}, []),
+		nmap2comparison = RIP.NetworkSimulation({"1": rip.Router("1", {}, ["3"]),
+			 			 		   				 "2": rip.Router("2", {}, ["3"]),
 			 			 		   				 "3": rip.Router("3", {}, ["1", "2"])})
 		if nmap2.netMap == nmap2comparison.netMap:
 		   	print("PASS")
@@ -148,7 +148,7 @@ def testSummary(printing):
 	#TEST 3
 	print("----------------------TEST 3------------------------------")
 	nmap3 = RIP.NetworkSimulation(
-		{"1": rip.Router("1", {"u":["2", 0]}, ["2"]),
+		{"1": rip.Router("1", {"u":["2", 2]}, ["2"]),
 		 "2": rip.Router("2", {"u":["-", 1]}, ["1"])}
 		 )
 	if printing == True:
@@ -170,6 +170,37 @@ def testSummary(printing):
 			 			 		   				 "2": rip.Router("2", {"u":["-", 1]}, []),
 			 			 		   				 })
 		if nmap3.netMap == nmap3comparison.netMap:
+		   	print("PASS")
+		else:
+			print("FAIL")
+	#TEST 4
+	print("----------------------TEST 4------------------------------")
+	nmap4 = RIP.NetworkSimulation(
+		{"1": rip.Router("1", {"u":["2", 2]}, ["2", "3"]),
+		 "2": rip.Router("2", {"u":["-", 1]}, ["1"]),
+		 "3": rip.Router("3", {"u":["1", 3]}, ["1"])
+		 })
+	if printing == True:
+		print("-----------------------------------------------------")
+		print("TEST 4 Print BEFORE----------------------------------")
+		print("-----------------------------------------------------")
+		nmap4.printNET()
+	nmap4.breakConnection("1", "2")
+	nmap4.mapNet()
+	if printing == True:
+		print("-----------------------------------------------------")
+		print("TEST 4 Print AFTER-----------------------------------")
+		print("-----------------------------------------------------")
+		#1 and 2 should have no neighbors
+		nmap4.printNET()
+	#NOT PRINTING
+	if printing == False:
+		nmap4comparison = RIP.NetworkSimulation(
+			{"1": rip.Router("1", {}, ["3"]),
+		 	 "2": rip.Router("2", {"u":["-", 1]}, []),
+		 	 "3": rip.Router("3", {}, ["1"])
+		 	})
+		if nmap4.netMap == nmap4comparison.netMap:
 		   	print("PASS")
 		else:
 			print("FAIL")
