@@ -204,11 +204,52 @@ def testSummary(printing):
 		   	print("PASS")
 		else:
 			print("FAIL")
+	#TEST 5
+	print("----------------------TEST 5------------------------------")
+	nmap5 = RIP.NetworkSimulation(
+		{"A": rip.Router("A", {"u": ["-", 1], "w": ["-", 1]}, ["C", "B"]),
+		 "B": rip.Router("B", {}, ["A", "G"]),
+		 "C": rip.Router("C", {"x": ["-", 1]}, ["A", "D"]),
+		 "D": rip.Router("D", {"z": ["-", 1], "y": ["-", 1]}, ["H", "I", "C"]),
+		 "E": rip.Router("E", {"s": ["-", 1]}, ["F", "I"]),
+		 "F": rip.Router("F", {"q": ["-", 1]}, ["G", "E", "H"]),
+		 "G": rip.Router("G", {}, ["F", "B"]),
+		 "H": rip.Router("H", {"r": ["-", 1]}, ["F", "D"]),
+		 "I": rip.Router("I", {}, ["D", "E"])
+		 })
+	if printing == True:
+		print("-----------------------------------------------------")
+		print("TEST 5 Print BEFORE----------------------------------")
+		print("-----------------------------------------------------")
+		nmap5.printNET()
+	nmap5.mapNet()
+	if printing == True:
+		print("-----------------------------------------------------")
+		print("TEST 5 Print AFTER-----------------------------------")
+		print("-----------------------------------------------------")
+		nmap5.printNET()
+	#NOT PRINTING
+	if printing == False:
+		nmap5comparison = RIP.NetworkSimulation(
+			{"A": rip.Router("A", {"q": ["-", 1], "r": ["-", 1],"s": ["-", 1], "x": ["-", 1], "y": ["-", 1], "z": ["-", 1] "u": ["-", 1], "w": ["-", 1]}, ["C", "B"]),
+		 	 "B": rip.Router("B", {}, ["A", "G"]),
+		 	 "C": rip.Router("C", {"x": ["-", 1]}, ["A", "D"]),
+		 	 "D": rip.Router("D", {"z": ["-", 1], "y": ["-", 1]}, ["H", "I", "C"]),
+		 	 "E": rip.Router("E", {"s": ["-", 1]}, ["F", "I"]),
+		 	 "F": rip.Router("F", {"q": ["-", 1]}, ["G", "E", "H"]),
+		 	 "G": rip.Router("G", {}, ["F", "B"]),
+		 	 "H": rip.Router("H", {"r": ["-", 1]}, ["F", "D"]),
+		 	 "I": rip.Router("I", {}, ["D", "E"])
+		 })
+		if nmap5.netMap == nmap5comparison.netMap:
+		   	print("PASS")
+		else:
+			print("FAIL")
 #######################################################################################
 #######################################################################################
 	
 def main():
-	testSummary(False)
+	testSummary(True)
 
 	# Intializations
 	nmap0 = RIP.NetworkSimulation({"1": rip.Router("192.168.1.1"), "2": rip.Router("2"), "3": rip.Router("3")})
