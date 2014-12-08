@@ -207,44 +207,41 @@ def testSummary(printing):
 	#TEST 5
 	print("----------------------TEST 5------------------------------")
 	nmap5 = RIP.NetworkSimulation(
-		{"A": rip.Router("A", {"u": ["-", 1], "w": ["-", 1]}, ["C", "B"]),
-		 "B": rip.Router("B", {}, ["A", "G"]),
-		 "C": rip.Router("C", {"x": ["-", 1]}, ["A", "D"]),
-		 "D": rip.Router("D", {"z": ["-", 1], "y": ["-", 1]}, ["H", "I", "C"]),
-		 "E": rip.Router("E", {"s": ["-", 1]}, ["F", "J"]),
-		 "F": rip.Router("F", {"q": ["-", 1]}, ["G", "E", "H"]),
-		 "G": rip.Router("G", {}, ["F", "B"]),
-		 "H": rip.Router("H", {"r": ["-", 1]}, ["F", "D"]),
-		 "I": rip.Router("I", {}, ["D", "J"]),
-		 "J": rip.Router("I", {}, ["I", "E"])
+		{"A": rip.Router("A", {"x":["-", 1]}, ["B", "E"]),
+		 "B": rip.Router("B", {}, ["A", "C"]),
+		 "C": rip.Router("C", {}, ["B", "D"]),
+		 "D": rip.Router("D", {}, ["C", "E"]),
+		 "E": rip.Router("E", {"z":["-", 1]}, ["D", "A"])
 		 })
 	nmap5.mapNet()
 	if printing == True:
 		print("-----------------------------------------------------")
-		print("TEST 5 Print BEFORE Simulaneous Breaks---------------")
+		print("TEST 5 Print BEFORE Break----------------------------")
 		print("-----------------------------------------------------")
 		nmap5.printNET()
-	nmap5.breakConnection("C", "D")
-	nmap5.breakConnection("F", "E")
+	nmap5.breakConnection("A", "E")
 	nmap5.mapNet()
 	if printing == True:
 		print("-----------------------------------------------------")
-		print("TEST 5 Print AFTER Simultaneous Breaks---------------")
+		print("TEST 5 Print AFTER Breaks----------------------------")
 		print("-----------------------------------------------------")
 		nmap5.printNET()
-	nmap5.breakConnection("B", "G")
-	nmap5.mapNet()
-	if printing == True:
-		print("-----------------------------------------------------")
-		print("TEST 5 Print AFTER Isolated Network Break------------")
-		print("-----------------------------------------------------")
-		nmap5.printNET()
+	#PASS OR FAIL SETTING
+	if printing == False:
+		nmap5comparison = RIP.NetworkSimulation(
+		{"A": rip.Router("A", {"x":["-", 1], "z":["B", 5]}, ["B"]),
+		 "B": rip.Router("B", {"x":["A", 2], "z":["C", 4]}, ["A", "C"]),
+		 "C": rip.Router("C", {"x":["B", 3], "z":["D", 3]}, ["B", "D"]),
+		 "D": rip.Router("D", {"x":["C", 4], "z":["E", 2]}, ["C", "E"]),
+		 "E": rip.Router("E", {"x":["D", 5], "z":["-", 1]}, ["D"])
+		 })
+		if nmap5.netMap == nmap5comparison.netMap:
+		   	print("PASS")
+		else:
+			print("FAIL")
 #######################################################################################
 #######################################################################################
-	
-def main():
-	testSummary(True)
-
+def figurePrint():
 	# Intializations
 	nmap0 = RIP.NetworkSimulation({"1": rip.Router("192.168.1.1"), "2": rip.Router("2"), "3": rip.Router("3")})
 	nmap1 = RIP.NetworkSimulation(
@@ -311,4 +308,8 @@ def main():
 
 	# Generate random subnet kill based on likelihood
 
+def main():
+	testSummary(False)
+
+	
 if __name__ == "__main__": main()
