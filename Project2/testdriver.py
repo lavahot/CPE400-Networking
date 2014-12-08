@@ -278,10 +278,48 @@ def main():
 
 	# Draw Graph
 	#graph = [(nmap0.netMap["1"].ip, 21),(21, 22),(21, 23), (23, 24),(24, 25), (25, nmap0.netMap["1"].ip)]
-	draw_graph(g1)
-	draw_graph(g2)
-	draw_graph(g3)
-	draw_graph(g4)
+	#draw_graph(g1)
+	#draw_graph(g2)
+	#draw_graph(g3)
+	#draw_graph(g4)
+	
+	# Visualize Test Case 4
+	#TEST 4
+	print("----------------------TEST 4------------------------------")
+	nmap4 = RIP.NetworkSimulation(
+		{"1": rip.Router("1", {"u":["2", 2]}, ["2", "3"]),
+		 "2": rip.Router("2", {"u":["-", 1]}, ["1"]),
+		 "3": rip.Router("3", {"u":["1", 3]}, ["1"])
+		 })
+	g6 = convert(nmap4.netMap)
+	if printing == True:
+		print("-----------------------------------------------------")
+		print("TEST 4 Print BEFORE----------------------------------")
+		print("-----------------------------------------------------")
+		nmap4.printNET()
+		draw_graph(g6)
+		
+	nmap4.breakConnection("1", "2")
+	nmap4.mapNet()
+	g6 = convert(nmap4.netMap)
+	if printing == True:
+		print("-----------------------------------------------------")
+		print("TEST 4 Print AFTER-----------------------------------")
+		print("-----------------------------------------------------")
+		#1 and 2 should have no neighbors
+		draw_graph(g6)
+		nmap4.printNET()
+	#NOT PRINTING
+	if printing == False:
+		nmap4comparison = RIP.NetworkSimulation(
+			{"1": rip.Router("1", {}, ["3"]),
+		 	 "2": rip.Router("2", {"u":["-", 1]}, []),
+		 	 "3": rip.Router("3", {}, ["1"])
+		 	})
+		if nmap4.netMap == nmap4comparison.netMap:
+		   	print("PASS")
+		else:
+			print("FAIL")
 
 	# Wait for subnet kill
 
