@@ -276,43 +276,48 @@ def main():
 	#draw_graph(g4)
 	
 	# Visualize Test Case 4
-	#TEST 4
-	printing = False
-	print("----------------------TEST 4------------------------------")
-	nmap4 = RIP.NetworkSimulation(
-		{"1": rip.Router("1", {"u":["2", 2]}, ["2", "3"]),
-		 "2": rip.Router("2", {"u":["-", 1]}, ["1"]),
-		 "3": rip.Router("3", {"u":["1", 3]}, ["1"])
+	#TEST 5
+	printing = true;
+	print("----------------------TEST 5------------------------------")
+	nmap5 = RIP.NetworkSimulation(
+		{"A": rip.Router("A", {"u": ["-", 1], "w": ["-", 1]}, ["C", "B"]),
+		 "B": rip.Router("B", {}, ["A", "G"]),
+		 "C": rip.Router("C", {"x": ["-", 1]}, ["A", "D"]),
+		 "D": rip.Router("D", {"z": ["-", 1], "y": ["-", 1]}, ["H", "I", "C"]),
+		 "E": rip.Router("E", {"s": ["-", 1]}, ["F", "J"]),
+		 "F": rip.Router("F", {"q": ["-", 1]}, ["G", "E", "H"]),
+		 "G": rip.Router("G", {}, ["F", "B"]),
+		 "H": rip.Router("H", {"r": ["-", 1]}, ["F", "D"]),
+		 "I": rip.Router("I", {}, ["D", "J"]),
+		 "J": rip.Router("I", {}, ["I", "E"])
 		 })
-	g6 = convert(nmap4.netMap)
+	nmap5.mapNet()
+	g6 = convert(nmap5.netMap)
 	if printing == True:
 		print("-----------------------------------------------------")
-		print("TEST 4 Print BEFORE----------------------------------")
+		print("TEST 5 Print BEFORE Simulaneous Breaks---------------")
 		print("-----------------------------------------------------")
-		nmap4.printNET()
+		nmap5.printNET()
 		draw_graph(g6)
-		
-	nmap4.breakConnection("1", "2")
-	nmap4.mapNet()
-	g6 = convert(nmap4.netMap)
+	nmap5.breakConnection("C", "D")
+	nmap5.breakConnection("F", "E")
+	nmap5.mapNet()
+	g6 = convert(nmap5.netMap)
 	if printing == True:
 		print("-----------------------------------------------------")
-		print("TEST 4 Print AFTER-----------------------------------")
+		print("TEST 5 Print AFTER Simultaneous Breaks---------------")
 		print("-----------------------------------------------------")
-		#1 and 2 should have no neighbors
+		nmap5.printNET()
 		draw_graph(g6)
-		nmap4.printNET()
-	#NOT PRINTING
-	if printing == False:
-		nmap4comparison = RIP.NetworkSimulation(
-			{"1": rip.Router("1", {}, ["3"]),
-		 	 "2": rip.Router("2", {"u":["-", 1]}, []),
-		 	 "3": rip.Router("3", {}, ["1"])
-		 	})
-		if nmap4.netMap == nmap4comparison.netMap:
-		   	print("PASS")
-		else:
-			print("FAIL")
+	nmap5.breakConnection("B", "G")
+	nmap5.mapNet()
+	g6 = convert(nmap5.netMap)
+	if printing == True:
+		print("-----------------------------------------------------")
+		print("TEST 5 Print AFTER Isolated Network Break------------")
+		print("-----------------------------------------------------")
+		nmap5.printNET()
+		draw_graph(g6)
 
 	# Wait for subnet kill
 
