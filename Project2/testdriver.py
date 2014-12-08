@@ -277,7 +277,7 @@ def main():
 	
 	# Visualize Test Case 4
 	#TEST 5
-	printing = true;
+	printing = True;
 	print("----------------------TEST 5------------------------------")
 	nmap5 = RIP.NetworkSimulation(
 		{"A": rip.Router("A", {"u": ["-", 1], "w": ["-", 1]}, ["C", "B"]),
@@ -289,27 +289,15 @@ def main():
 		 "G": rip.Router("G", {}, ["F", "B"]),
 		 "H": rip.Router("H", {"r": ["-", 1]}, ["F", "D"]),
 		 "I": rip.Router("I", {}, ["D", "J"]),
-		 "J": rip.Router("I", {}, ["I", "E"])
+		 "J": rip.Router("J", {}, ["I", "E"])
 		 })
 	nmap5.mapNet()
-	g6 = convert(nmap5.netMap)
-	if printing == True:
-		print("-----------------------------------------------------")
-		print("TEST 5 Print BEFORE Simulaneous Breaks---------------")
-		print("-----------------------------------------------------")
-		nmap5.printNET()
-		draw_graph(g6)
 	nmap5.breakConnection("C", "D")
 	nmap5.breakConnection("F", "E")
 	nmap5.mapNet()
-	g6 = convert(nmap5.netMap)
-	if printing == True:
-		print("-----------------------------------------------------")
-		print("TEST 5 Print AFTER Simultaneous Breaks---------------")
-		print("-----------------------------------------------------")
-		nmap5.printNET()
-		draw_graph(g6)
 	nmap5.breakConnection("B", "G")
+	nmap5.mapNet()
+	nmap5.mapNet()
 	nmap5.mapNet()
 	g6 = convert(nmap5.netMap)
 	if printing == True:
