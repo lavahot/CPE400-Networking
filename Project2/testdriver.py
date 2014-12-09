@@ -55,21 +55,6 @@ def routerCheck(nmap,currentRouter,subDest):
 					return False
 
 
-#			for key2 in nmap.netMap[key].ripTable:
-#				print nmap.netMap[key].ripTable[key2][1]
-#				if nmap.netMap[key].ripTable[key2][1] == subDest:
-#					if nmap.netMap[key].ripTable[key2][1] == 1:
-#						#print "success"
-#						return True
-#					else:
-#						return False
-				#else:
-					#print "Subnet not in table, Cannot Transmit File"
-		#else:
-			#print nmap.netMap[key].ip,"Failure to find router in netMap"
-
-
-
 #######################################################################################
 #######################################################################################
 # Loads file, parses it into UDP packets, and sends it from one subnet to another
@@ -89,10 +74,8 @@ def fileTransfer(subSource, subDest, nmap):
 	for key in nmap.netMap:
 		# Search through subnet list for hop == 1
 		for key2 in nmap.netMap[key].ripTable:
-			#print nmap.netMap[key].ripTable
 			if nmap.netMap[key].ripTable[subSource][1] == 1:
 				homeRouter = nmap.netMap[key].ip
-				#print "current router", currentRouter
 
 
 	# Loop through file transmission of all packets
@@ -108,7 +91,7 @@ def fileTransfer(subSource, subDest, nmap):
 			if routerCheck(nmap,currentRouter,subDest) == False:
 				# Find/Send to next router in riptable of local router
 				nextRouter = nmap.netMap[currentRouter].ripTable[subDest][0]
-				# Update source of UDP packet
+				# Move location of UDP packet
 				currentRouter = nextRouter
 				hops = hops + 1
 			else:
@@ -232,8 +215,7 @@ def testSummary(printing):
 		print("-----------------------------------------------------")
 		nmap1.printNET()
 		drawNet(nmap1)
-		# Application and Transport Layer Testing
-		fileTransfer("u", "w", nmap1)
+
 	nmap1.mapNet()
 
 
@@ -341,6 +323,7 @@ def testSummary(printing):
 		#1 and 2 should have no neighbors
 		nmap4.printNET()
 		drawNet(nmap4)
+
 	#NOT PRINTING
 	if printing == False:
 		nmap4comparison = RIP.NetworkSimulation(
@@ -371,8 +354,8 @@ def testSummary(printing):
 		print("-----------------------------------------------------")
 		nmap5.printNET()
 		drawNet(nmap5)
-	# Application and Transport Layer Testing before break
-	fileTransfer("x", "z", nmap5)
+		# Application and Transport Layer Testing after break
+		fileTransfer("x", "z", nmap5)
 
 	nmap5.breakConnection("A", "E")
 	nmap5.mapNet()
@@ -382,9 +365,9 @@ def testSummary(printing):
 		print("-----------------------------------------------------")
 		nmap5.printNET()
 		drawNet(nmap5)
+		# Application and Transport Layer Testing after break
+		fileTransfer("x", "z", nmap5)
 
-	# Application and Transport Layer Testing after break
-	fileTransfer("x", "z", nmap5)
 
 	#PASS OR FAIL SETTING
 	if printing == False:
@@ -406,7 +389,7 @@ def testSummary(printing):
 
 
 def main():
-	testSummary(False)
+	testSummary(True)
 
 	
 if __name__ == "__main__": main()
