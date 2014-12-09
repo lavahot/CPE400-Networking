@@ -35,7 +35,7 @@ def udp(data, source, destination):
 	dataList = data.split()
 
 	# Populate UDP packet structures with data and place in buffer
-	for i in dataList:
+	for i in range(len(dataList)):
 		buffer.put([source,destination,len(dataList),checksum(dataList[i]),dataList[i]])
 
 	# Return buffer of UDP packets
@@ -49,6 +49,8 @@ def fileTransfer(subSource, subDest, nmap):
 
 	# Initializations
 	rawData = "12345678 12345678 12345678 12345678"
+	packet = 0
+	hops = 0
 
 	# Turn file into UDP packets
 	buffer = udp(rawData, subSource, subDest)
@@ -59,15 +61,24 @@ def fileTransfer(subSource, subDest, nmap):
 		# Check for destination
 		currentPacket = buffer.get()
 		currentRouter = currentPacket[0]
+		
 		delivered = False
 		# Loop until delivered
 		while delivered == False:
 			if currentPacket[1] != subDest:
 				# Find/Send to next router in riptable of local router
-				nmap
-				# Update current router
+				nextRouter = nmap[currentRouter].ripTable[subDest][0]
+				print nextRouter
+				# Update source of UDP packet
+				currentPacket[1] = nextRouter
+				hops += 1
 			else:
 				delivered = True
+		# Output Transfer Results of single packet
+		print "Packet ", (packet+1), " has been transferred to the destination subnet in ", hops, " hops"
+		# Update packet counter
+		packet = packet + 1
+		hops = 0
 
 
 #######################################################################################
@@ -329,74 +340,13 @@ def testSummary(printing):
 		   	print("PASS")
 		else:
 			print("FAIL")
+
+	# Application and Transport Layer Testing
+	fileTransfer("x", "z", nmap5)
+
 #######################################################################################
 #######################################################################################
-def figurePrint():
-	# Intializations
-	nmap0 = RIP.NetworkSimulation({"1": rip.Router("192.168.1.1"), "2": rip.Router("2"), "3": rip.Router("3")})
-	nmap1 = RIP.NetworkSimulation(
-		{"1": rip.Router("1", {"u": ["-", 1]}, ["2", "3"]),
-		 "2": rip.Router("2", {"w": ["-", 1]}, ["1"]),
-		 "3": rip.Router("3", {}, ["1"])}
-		 )
-	nmap2 = RIP.NetworkSimulation(
-		{"1": rip.Router("1", {}, ["2"]),
-		 "2": rip.Router("2", {}, ["1"]),
-		 "3": rip.Router("3", {}, ["1", "2"])}
-		 )
-	nmap3 = RIP.NetworkSimulation(
-		{"1": rip.Router("1", {}, ["2"]),
-		 "2": rip.Router("2", {}, ["1"])}
-		 )
 
-	# Convert router dictionary to graph
-	g1 = convert(nmap0.netMap)
-	g2 = convert(nmap1.netMap)
-	g3 = convert(nmap2.netMap)
-	g4 = convert(nmap3.netMap)
-
-	# Draw Graph
-	#graph = [(nmap0.netMap["1"].ip, 21),(21, 22),(21, 23), (23, 24),(24, 25), (25, nmap0.netMap["1"].ip)]
-	#draw_graph(g1)
-	#draw_graph(g2)
-	#draw_graph(g3)
-	#draw_graph(g4)
-	
-	# Visualize Test Case 4
-	#TEST 5
-	printing = True;
-	print("----------------------TEST 5------------------------------")
-	nmap5 = RIP.NetworkSimulation(
-		{"A": rip.Router("A", {"u": ["-", 1], "w": ["-", 1]}, ["C", "B"]),
-		 "B": rip.Router("B", {}, ["A", "G"]),
-		 "C": rip.Router("C", {"x": ["-", 1]}, ["A", "D"]),
-		 "D": rip.Router("D", {"z": ["-", 1], "y": ["-", 1]}, ["H", "I", "C"]),
-		 "E": rip.Router("E", {"s": ["-", 1]}, ["F", "J"]),
-		 "F": rip.Router("F", {"q": ["-", 1]}, ["G", "E", "H"]),
-		 "G": rip.Router("G", {}, ["F", "B"]),
-		 "H": rip.Router("H", {"r": ["-", 1]}, ["F", "D"]),
-		 "I": rip.Router("I", {}, ["D", "J"]),
-		 "J": rip.Router("J", {}, ["I", "E"])
-		 })
-	nmap5.mapNet()
-	nmap5.breakConnection("C", "D")
-	nmap5.breakConnection("F", "E")
-	nmap5.mapNet()
-	nmap5.breakConnection("B", "G")
-	nmap5.mapNet()
-	nmap5.mapNet()
-	nmap5.mapNet()
-	g6 = convert(nmap5.netMap)
-	if printing == True:
-		print("-----------------------------------------------------")
-		print("TEST 5 Print AFTER Isolated Network Break------------")
-		print("-----------------------------------------------------")
-		nmap5.printNET()
-		draw_graph(g6)
-
-	# Wait for subnet kill
-
-	# Generate random subnet kill based on likelihood
 
 def main():
 	testSummary(False)
