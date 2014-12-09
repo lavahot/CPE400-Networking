@@ -44,8 +44,8 @@ def udp(data, source, destination):
 #######################################################################################
 #######################################################################################
 # Loads file, parses it into UDP packets, and sends it from one subnet to another
-# through the network
-def fileTransfer(subSource, subDest):	
+# through the network based on RIP table mappings
+def fileTransfer(subSource, subDest, nmap):	
 
 	# Initializations
 	rawData = "12345678 12345678 12345678 12345678"
@@ -53,7 +53,21 @@ def fileTransfer(subSource, subDest):
 	# Turn file into UDP packets
 	buffer = udp(rawData, subSource, subDest)
 
-	# Send each packet
+	# Loop through file transmission of all packets
+	# For each packet
+	while not buffer.empty():
+		# Check for destination
+		currentPacket = buffer.get()
+		currentRouter = currentPacket[0]
+		delivered = False
+		# Loop until delivered
+		while delivered == False:
+			if currentPacket[1] != subDest:
+				# Find/Send to next router in riptable of local router
+				nmap
+				# Update current router
+			else:
+				delivered = True
 
 
 #######################################################################################
