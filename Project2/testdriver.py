@@ -44,12 +44,30 @@ def udp(data, source, destination):
 #######################################################################################
 #######################################################################################
 # Checks if at correct router that directly connects to the right subnet
-def routerCheck(routerTest,currentRouter,subDest):
+def routerCheck(nmap,currentRouter,subDest):
 	#print routerTest.netMap[currentRouter].ripTable
-	if routerTest.netMap[currentRouter].ripTable[subDest][1] == 1:
-		return True
-	else:
-		return False
+	#nmap5.netMap['A'].ripTable['x'][1]
+	#if nmap.netMap[currentRouter].ripTable[subDest][1] == 1:
+	#if nmap.netMap['A'].ripTable['x'][1] == 1:
+		#return True
+	#else:
+		#return False
+
+	for key in nmap.netMap:
+		#print currentRouter
+		if nmap.netMap[key].ip == currentRouter:
+			for key2 in nmap.netMap[key].ripTable:
+				if nmap.netMap[key].ripTable[key2]:
+					if nmap.netMap[key].ripTable[key2][1] == 1:
+						#print "success"
+						return True
+					else:
+						return False
+				else:
+					print "Subnet not in table, Cannot Transmit File"
+		#else:
+			#print nmap.netMap[key].ip,"Failure to find router in netMap"
+
 
 
 #######################################################################################
@@ -66,22 +84,33 @@ def fileTransfer(subSource, subDest, nmap):
 	# Turn file into UDP packets
 	buffer = udp(rawData, subSource, subDest)
 
+	# Find Local Router (first connect, subSource->first router)
+	# Search through each router
+	for key in nmap.netMap:
+		# Search through subnet list for hop == 1
+		for key2 in nmap.netMap[key].ripTable:
+			#print nmap.netMap[key].ripTable
+			if nmap.netMap[key].ripTable[subSource][1] == 1:
+				homeRouter = nmap.netMap[key].ip
+				#print "current router", currentRouter
+
+
 	# Loop through file transmission of all packets
 	# For each packet
 	while not buffer.empty():
 		# Check for destination
 		currentPacket = buffer.get()
-		currentRouter = currentPacket[0]
+		currentRouter = homeRouter
 		delivered = False
 		# Loop until delivered
 		while delivered == False:
 			# Check if at final router
 			if routerCheck(nmap,currentRouter,subDest) == True:
 				# Find/Send to next router in riptable of local router
-				nextRouter = nmap[currentRouter].ripTable[subDest][0]
-				print nextRouter
+				nextRouter = nmap.netMap[currentRouter].ripTable[subDest][0]
+				#print nextRouter
 				# Update source of UDP packet
-				currentPacket[1] = nextRouter
+				currentRouter = nextRouter
 				hops += 1
 			else:
 				delivered = True
@@ -161,6 +190,7 @@ def draw_graph(graph,routerD):	# Draws resulting graph from previous function
 
 def testSummary(printing):
 	#TESTS
+############################################
 	#TEST 0: No data
 	print("----------------------TEST 0-------------------------------")
 	nmap0 = RIP.NetworkSimulation({"1": rip.Router("1"),
@@ -189,6 +219,7 @@ def testSummary(printing):
 		   	print("PASS")
 		else:
 			print("FAIL")
+############################################
 	#TEST 1
 	print("----------------------TEST 1------------------------------")
 	nmap1 = RIP.NetworkSimulation(
@@ -202,7 +233,12 @@ def testSummary(printing):
 		print("-----------------------------------------------------")
 		nmap1.printNET()
 		drawNet(nmap1)
+		# Application and Transport Layer Testing
+		fileTransfer("u", "w", nmap1)
 	nmap1.mapNet()
+
+
+
 	#"3" need to add: "w": ["1", 3]
 	#"2" needs to add "u" : ["1", 2]
 	if printing == True:
@@ -220,6 +256,7 @@ def testSummary(printing):
 		   	print("PASS")
 		else:
 			print("FAIL")
+############################################
 	#TEST 2
 	print("----------------------TEST 2------------------------------")
 	nmap2 = RIP.NetworkSimulation(
@@ -251,6 +288,7 @@ def testSummary(printing):
 		   	print("PASS")
 		else:
 			print("FAIL")
+############################################
 	#TEST 3
 	print("----------------------TEST 3------------------------------")
 	nmap3 = RIP.NetworkSimulation(
@@ -281,6 +319,7 @@ def testSummary(printing):
 		   	print("PASS")
 		else:
 			print("FAIL")
+############################################
 	#TEST 4
 	print("----------------------TEST 4------------------------------")
 	nmap4 = RIP.NetworkSimulation(
@@ -314,6 +353,7 @@ def testSummary(printing):
 		   	print("PASS")
 		else:
 			print("FAIL")
+############################################
 	#TEST 5
 	print("----------------------TEST 5------------------------------")
 	nmap5 = RIP.NetworkSimulation(
@@ -325,9 +365,6 @@ def testSummary(printing):
 		 })
 	nmap5.mapNet()
 
-	# Application and Transport Layer Testing
-	#print nmap5.netMap['A'].ripTable['x'][1]
-	fileTransfer('x', 'z', nmap5)
 
 	if printing == True:
 		print("-----------------------------------------------------")
@@ -335,6 +372,9 @@ def testSummary(printing):
 		print("-----------------------------------------------------")
 		nmap5.printNET()
 		drawNet(nmap5)
+	# Application and Transport Layer Testing before break
+	fileTransfer("x", "z", nmap5)
+
 	nmap5.breakConnection("A", "E")
 	nmap5.mapNet()
 	if printing == True:
@@ -343,6 +383,10 @@ def testSummary(printing):
 		print("-----------------------------------------------------")
 		nmap5.printNET()
 		drawNet(nmap5)
+
+	# Application and Transport Layer Testing after break
+	fileTransfer("x", "z", nmap5)
+
 	#PASS OR FAIL SETTING
 	if printing == False:
 		nmap5comparison = RIP.NetworkSimulation(
@@ -357,8 +401,6 @@ def testSummary(printing):
 		else:
 			print("FAIL")
 
-	# Application and Transport Layer Testing
-	fileTransfer("x", "z", nmap5)
 
 #######################################################################################
 #######################################################################################
