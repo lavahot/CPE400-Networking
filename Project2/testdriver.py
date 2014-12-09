@@ -48,13 +48,21 @@ def routerCheck(nmap,currentRouter,subDest):
 	for key in nmap.netMap:
 		#print currentRouter
 		if nmap.netMap[key].ip == currentRouter:
-			for key2 in nmap.netMap[key].ripTable:
-				if nmap.netMap[key].ripTable[key2] == subDest:
-					if nmap.netMap[key].ripTable[key2][1] == 1:
-						#print "success"
-						return True
-					else:
-						return False
+			if nmap.netMap[key].ripTable.has_key(subDest) == True:
+				if nmap.netMap[key].ripTable[subDest][1] == 1:
+					return True
+				else:
+					return False
+
+
+#			for key2 in nmap.netMap[key].ripTable:
+#				print nmap.netMap[key].ripTable[key2][1]
+#				if nmap.netMap[key].ripTable[key2][1] == subDest:
+#					if nmap.netMap[key].ripTable[key2][1] == 1:
+#						#print "success"
+#						return True
+#					else:
+#						return False
 				#else:
 					#print "Subnet not in table, Cannot Transmit File"
 		#else:
@@ -100,16 +108,13 @@ def fileTransfer(subSource, subDest, nmap):
 			if routerCheck(nmap,currentRouter,subDest) == False:
 				# Find/Send to next router in riptable of local router
 				nextRouter = nmap.netMap[currentRouter].ripTable[subDest][0]
-				print nextRouter
-				print currentRouter
 				# Update source of UDP packet
 				currentRouter = nextRouter
-				print currentRouter
 				hops = hops + 1
 			else:
 				delivered = True
 		# Output Transfer Results of single packet
-		print "Packet ", (packet+1), " has been transferred to the destination subnet in ", hops, " hops"
+		print "Packet ", (packet+1), " has been transferred from subnet ", subSource, " to subnet ", subDest, " in ", hops, " hop(s)"
 		# Update packet counter
 		packet = packet + 1
 		hops = 0
