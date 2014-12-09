@@ -43,6 +43,17 @@ def udp(data, source, destination):
 
 #######################################################################################
 #######################################################################################
+# Checks if at correct router that directly connects to the right subnet
+def routerCheck(routerTest,currentRouter,subDest):
+	#print routerTest.netMap[currentRouter].ripTable
+	if routerTest.netMap[currentRouter].ripTable[subDest][1] == 1:
+		return True
+	else:
+		return False
+
+
+#######################################################################################
+#######################################################################################
 # Loads file, parses it into UDP packets, and sends it from one subnet to another
 # through the network based on RIP table mappings
 def fileTransfer(subSource, subDest, nmap):	
@@ -61,11 +72,11 @@ def fileTransfer(subSource, subDest, nmap):
 		# Check for destination
 		currentPacket = buffer.get()
 		currentRouter = currentPacket[0]
-		
 		delivered = False
 		# Loop until delivered
 		while delivered == False:
-			if currentPacket[1] != subDest:
+			# Check if at final router
+			if routerCheck(nmap,currentRouter,subDest) == True:
 				# Find/Send to next router in riptable of local router
 				nextRouter = nmap[currentRouter].ripTable[subDest][0]
 				print nextRouter
@@ -313,6 +324,11 @@ def testSummary(printing):
 		 "E": rip.Router("E", {"z":["-", 1]}, ["D", "A"])
 		 })
 	nmap5.mapNet()
+
+	# Application and Transport Layer Testing
+	#print nmap5.netMap['A'].ripTable['x'][1]
+	fileTransfer('x', 'z', nmap5)
+
 	if printing == True:
 		print("-----------------------------------------------------")
 		print("TEST 5 Print BEFORE Break----------------------------")
