@@ -9,10 +9,52 @@ import RIP
 import riprouter as rip
 import networkx as nx
 import matplotlib.pyplot as plt
+import Queue
 
 # Global Lists
 subnet=[]
 router=[]
+
+#######################################################################################
+## Application and Transport Layer Implementation
+#######################################################################################
+# Calculates Checksum for UDP packet
+def checksum(data):
+	return '%2X' % (-(sum(ord(c) for c in data) % 256) & 0xFF)
+
+#######################################################################################
+#######################################################################################
+# Turns string into buffer of UDP packets (IPV6)
+# UDP Packet Format: |-Source-|-Destination-|-Length-|-Checksum-|-Data-|
+def udp(data, source, destination):
+
+	# Initializations
+	buffer = Queue.Queue()
+	
+	# Split raw data into sections for separate UDP packets
+	dataList = data.split()
+
+	# Populate UDP packet structures with data and place in buffer
+	for i in dataList:
+		buffer.put([source,destination,len(dataList),checksum(dataList[i]),dataList[i]])
+
+	# Return buffer of UDP packets
+	return buffer
+
+#######################################################################################
+#######################################################################################
+# Loads file, parses it into UDP packets, and sends it from one subnet to another
+# through the network
+def fileTransfer(subSource, subDest):	
+
+	# Initializations
+	rawData = "12345678 12345678 12345678 12345678"
+
+	# Turn file into UDP packets
+	buffer = udp(rawData, subSource, subDest)
+
+	# Send each packet
+
 
 #######################################################################################
 #######################################################################################
@@ -343,7 +385,7 @@ def figurePrint():
 	# Generate random subnet kill based on likelihood
 
 def main():
-	testSummary(True)
+	testSummary(False)
 
 	
 if __name__ == "__main__": main()
