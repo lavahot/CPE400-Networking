@@ -45,26 +45,18 @@ def udp(data, source, destination):
 #######################################################################################
 # Checks if at correct router that directly connects to the right subnet
 def routerCheck(nmap,currentRouter,subDest):
-	#print routerTest.netMap[currentRouter].ripTable
-	#nmap5.netMap['A'].ripTable['x'][1]
-	#if nmap.netMap[currentRouter].ripTable[subDest][1] == 1:
-	#if nmap.netMap['A'].ripTable['x'][1] == 1:
-		#return True
-	#else:
-		#return False
-
 	for key in nmap.netMap:
 		#print currentRouter
 		if nmap.netMap[key].ip == currentRouter:
 			for key2 in nmap.netMap[key].ripTable:
-				if nmap.netMap[key].ripTable[key2]:
+				if nmap.netMap[key].ripTable[key2] == subDest:
 					if nmap.netMap[key].ripTable[key2][1] == 1:
 						#print "success"
 						return True
 					else:
 						return False
-				else:
-					print "Subnet not in table, Cannot Transmit File"
+				#else:
+					#print "Subnet not in table, Cannot Transmit File"
 		#else:
 			#print nmap.netMap[key].ip,"Failure to find router in netMap"
 
@@ -105,13 +97,15 @@ def fileTransfer(subSource, subDest, nmap):
 		# Loop until delivered
 		while delivered == False:
 			# Check if at final router
-			if routerCheck(nmap,currentRouter,subDest) == True:
+			if routerCheck(nmap,currentRouter,subDest) == False:
 				# Find/Send to next router in riptable of local router
 				nextRouter = nmap.netMap[currentRouter].ripTable[subDest][0]
-				#print nextRouter
+				print nextRouter
+				print currentRouter
 				# Update source of UDP packet
 				currentRouter = nextRouter
-				hops += 1
+				print currentRouter
+				hops = hops + 1
 			else:
 				delivered = True
 		# Output Transfer Results of single packet
